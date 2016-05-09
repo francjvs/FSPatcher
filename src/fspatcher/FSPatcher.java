@@ -48,7 +48,7 @@ public class FSPatcher implements SUM {
     };
     public static String myPatchName = "FS Patcher";
     public static String authorName = "francjvs";
-    public static String version = "0.1";
+    public static String version = "0.2";
     public static String welcomeText = "Lootifies Weapons and Armor.  "
 	    + "Based HEAVILY on Diene's Lootification";
     public static String descriptionToShowInSUM = "Lootifies Weapons and Armor.";
