@@ -1,0 +1,12 @@
+[1]                            [OPEN DEBUG FILE]  Opening Debug File
+[2]                               [Run Location]  Program running from: C:\Java Libraries\FSPatcher\store\.
+[3]                                   [SPGlobal]  Skyrim.ini believed to be in: C:\Users\Francisco\Documents\My Games\Skyrim\Skyrim.ini. But it does not exist.  Locating manually.
+[4]                                  [EXCEPTION]  java.lang.NullPointerException
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at java.io.FileReader.<init>(Unknown Source)
+	at skyproc.SPGlobal.getLanguageFromSkyrimIni(SPGlobal.java:118)
+	at skyproc.gui.SUMGUI.handleArgs(SUMGUI.java:516)
+	at skyproc.gui.SUMGUI.open(SUMGUI.java:373)
+	at fspatcher.FSPatcher.main(FSPatcher.java:82)
+
+[5]                                      [DEBUG]  Closing Debug File.  Time was: 12939
