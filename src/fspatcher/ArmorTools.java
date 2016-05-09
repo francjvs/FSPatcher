@@ -19,11 +19,7 @@ public class ArmorTools {
     private static ArrayList<Pair<KYWD, ArrayList<ARMO>>> matchingSets = new ArrayList<>(0);
 
     static void buildOutfitsArmors(FLST baseArmorKeysFLST, Mod merger, Mod patch) {
-        FormID curForm;
-        ARMO curARMO;
-        OTFT curOTFT;
         
-
         for (OTFT lotft : merger.getOutfits()) {
             String lotftName = lotft.getEDID();
             boolean tiered = isTiered(lotftName);
@@ -36,7 +32,7 @@ public class ArmorTools {
                 }
 
                 String bits = getBits(lotftName);
-                LVLI subList = new LVLI("DienesLVLI" + lotftName + bits + "List");
+                LVLI subList = new LVLI("aa_" + lotftName + bits + "List");
                 subList.set(LeveledRecord.LVLFlag.UseAll, false);
                 String tierKey = getTierKey(lotftName);
 
@@ -70,7 +66,7 @@ public class ArmorTools {
                         form1 = a.get(i);
                         ARMO arm = (ARMO) merger.getMajor(form1, GRUP_TYPE.ARMO);
                         if (arm != null) {
-                            KYWD k = hasKeyStartsWith(arm, "dienes_outfit", merger);
+                            KYWD k = hasKeyStartsWith(arm, "aa_outfit", merger);
                             if (k != null) {
                                 ArrayList<ARMO> b = getAllWithKey(k, a, merger);
                                 if (b.size() > 1) {
@@ -113,7 +109,7 @@ public class ArmorTools {
                         KYWD baseKey = armorHasAnyKeyword(obj, baseArmorKeysFLST, merger);
 
                         if ((baseKey != null) && (hasVariant(obj))) {
-                            String eid = "DienesLVLI" + obj.getEDID();
+                            String eid = "aa_" + obj.getEDID();
                             MajorRecord r = merger.getMajor(eid, GRUP_TYPE.LVLI);
                             if (r == null) {
                                 LVLI subList = new LVLI(eid);
@@ -182,7 +178,7 @@ public class ArmorTools {
 
             //check if LVLI is one we made
             boolean found = false;
-            if (llist.getEDID().startsWith("DienesLVLI")) {
+            if (llist.getEDID().startsWith("aa_")) {
                 found = true;
             }
 
@@ -204,7 +200,7 @@ public class ArmorTools {
                         if ((base != null) && (hasVar)) {
                             //SPGlobal.log(obj.getEDID(), "has keyword" + base);
 
-                            String eid = "DienesLVLI" + obj.getEDID();
+                            String eid = "aa_" + obj.getEDID();
                             MajorRecord r;
 
                             r = merger.getMajor(eid, GRUP_TYPE.LVLI);
@@ -307,7 +303,7 @@ public class ArmorTools {
                                     //SPGlobal.log("Enchant found", armor.getEDID() + "  " + form.getEDID());
                                     String name = generateArmorName(armor, form, merger);
                                     String newEdid = generateArmorEDID(armor, form, merger);
-                                    ARMO armorDupe = (ARMO) patch.makeCopy(armor, "DienesARMO" + newEdid);
+                                    ARMO armorDupe = (ARMO) patch.makeCopy(armor, "aa_ARMO" + newEdid);
                                     //SPGlobal.log("armor copied", armorDupe.getEDID());
                                     armorDupe.setEnchantment(form.getEnchantment());
                                     armorDupe.setName(name);
@@ -485,7 +481,7 @@ public class ArmorTools {
     public static void modLVLIArmors(Mod merger, Mod patch) {
         for (LVLI llist : merger.getLeveledItems()) {
             String lname = llist.getEDID();
-            if (lname.contains("DienesLVLI")) {
+            if (lname.contains("aa_")) {
                 ARMO armor = (ARMO) merger.getMajor(llist.getEntry(0).getForm(), GRUP_TYPE.ARMO);
                 if (armor != null) {
                     if (hasVariant(armor)) {
@@ -554,7 +550,7 @@ public class ArmorTools {
     static void setupSets(Mod merger, Mod patch) {
         for (ARMO armor : merger.getArmors()) {
             if (armor.getTemplate().equals(FormID.NULL)) {
-                KYWD outfitKey = hasKeyStartsWith(armor, "dienes_outfit", merger);
+                KYWD outfitKey = hasKeyStartsWith(armor, "aa_outfit", merger);
                 if (outfitKey != null) {
                     boolean found = false;
                     for (Pair<KYWD, ArrayList<ARMO>> p : matchingSets) {
@@ -630,10 +626,10 @@ public class ArmorTools {
 
     static String getNameFromArrayWithKey(ArrayList<ARMO> a, KYWD k, Mod merger) {
         String ret = null;
-        if (k.getEDID().contains("dienes_outfit")) {
-            ret = "DienesLVLIOutfit" + k.getEDID().substring(13);
+        if (k.getEDID().contains("aa_outfit")) {
+            ret = "aa_Outfit" + k.getEDID().substring(13);
         } else {
-            ret = "DienesLVLIOutfit" + k.getEDID();
+            ret = "aa_Outfit" + k.getEDID();
         }
         boolean h = false;
         for (ARMO arm : a) {
@@ -703,7 +699,7 @@ public class ArmorTools {
         ArrayList<ARMO> s = getAllWithKeyARMO((KYWD) merger.getMajor("ArmorShield", GRUP_TYPE.KYWD), a, merger);
 
         if (h.size() > 1) {
-            String name = "DienesLVLI_" + hasKeyStartsWith(h.get(0), "dienes_outfit", merger).getEDID() + "HelmetsSublist";
+            String name = "aa__" + hasKeyStartsWith(h.get(0), "aa_outfit", merger).getEDID() + "HelmetsSublist";
             LVLI subList = (LVLI) merger.getMajor(name, GRUP_TYPE.LVLI);
             if (subList == null) {
                 subList = (LVLI) patch.getMajor(name, GRUP_TYPE.LVLI);
@@ -722,7 +718,7 @@ public class ArmorTools {
             list.addEntry(h.get(0).getForm(), 1, 1);
         }
         if (c.size() > 1) {
-            String name = "DienesLVLI_" + hasKeyStartsWith(c.get(0), "dienes_outfit", merger).getEDID() + "CuirassesSublist";
+            String name = "aa_" + hasKeyStartsWith(c.get(0), "aa_outfit", merger).getEDID() + "CuirassesSublist";
             LVLI subList = (LVLI) merger.getMajor(name, GRUP_TYPE.LVLI);
             if (subList == null) {
                 subList = (LVLI) patch.getMajor(name, GRUP_TYPE.LVLI);
@@ -741,7 +737,7 @@ public class ArmorTools {
             list.addEntry(c.get(0).getForm(), 1, 1);
         }
         if (g.size() > 1) {
-            String name = "DienesLVLI_" + hasKeyStartsWith(g.get(0), "dienes_outfit", merger).getEDID() + "GauntletsSublist";
+            String name = "aa_" + hasKeyStartsWith(g.get(0), "aa_outfit", merger).getEDID() + "GauntletsSublist";
             LVLI subList = (LVLI) merger.getMajor(name, GRUP_TYPE.LVLI);
             if (subList == null) {
                 subList = (LVLI) patch.getMajor(name, GRUP_TYPE.LVLI);
@@ -760,7 +756,7 @@ public class ArmorTools {
             list.addEntry(g.get(0).getForm(), 1, 1);
         }
         if (b.size() > 1) {
-            String name = "DienesLVLI_" + hasKeyStartsWith(b.get(0), "dienes_outfit", merger).getEDID() + "BootsSublist";
+            String name = "aa_" + hasKeyStartsWith(b.get(0), "aa_outfit", merger).getEDID() + "BootsSublist";
             LVLI subList = (LVLI) merger.getMajor(name, GRUP_TYPE.LVLI);
             if (subList == null) {
                 subList = (LVLI) patch.getMajor(name, GRUP_TYPE.LVLI);
@@ -779,7 +775,7 @@ public class ArmorTools {
             list.addEntry(b.get(0).getForm(), 1, 1);
         }
         if (s.size() > 1) {
-            String name = "DienesLVLI_" + hasKeyStartsWith(s.get(0), "dienes_outfit", merger).getEDID() + "ShieldsSublist";
+            String name = "aa_" + hasKeyStartsWith(s.get(0), "aa_outfit", merger).getEDID() + "ShieldsSublist";
             LVLI subList = (LVLI) merger.getMajor(name, GRUP_TYPE.LVLI);
             if (subList == null) {
                 subList = (LVLI) patch.getMajor(name, GRUP_TYPE.LVLI);
@@ -808,7 +804,7 @@ public class ArmorTools {
         KYWD k = null;
         ArrayList<Pair<KYWD, ArrayList<ARMO>>> varSets = new ArrayList<>(0);
         for (ARMO arm : a) {
-            k = hasKeyStartsWith(arm, "dienes_outfit", merger);
+            k = hasKeyStartsWith(arm, "aa_outfit", merger);
             for (Pair<KYWD, ArrayList<ARMO>> p1 : matchingSets) {
 
                 boolean key = k.equals(p1.getBase());
@@ -904,7 +900,7 @@ public class ArmorTools {
             k = hasKeyStartsWith(arm, "LLI_BASE", merger);
             boolean notBase = false;
             if (k == null) {
-                k = hasKeyStartsWith(arm, "dienes_outfit", merger);
+                k = hasKeyStartsWith(arm, "aa_outfit", merger);
                 notBase = true;
             }
 
@@ -1017,7 +1013,7 @@ public class ArmorTools {
             KYWD key = (KYWD) merger.getMajor(tierName, GRUP_TYPE.KYWD);
             if (key != null) {
                 ArrayList<ArrayList<ARMO>> array = getArrayOfTieredArmorSetsByKeyword(key, merger);
-                String edid = "DienesLVLI_" + keyPrefix + String.valueOf(tier);
+                String edid = "aa_" + keyPrefix + String.valueOf(tier);
                 for (ArrayList<ARMO> ar : array) {
                     if (arrayHasBits(ar, bits, merger)) {
 
@@ -1032,7 +1028,7 @@ public class ArmorTools {
                         if (change) {
                             changed = true;
                         }
-                        String setListName = "DienesLVLI_" + hasKeyStartsWith(ar.get(0), "dienes_outfit", merger).getEDID().substring(14) + bits;
+                        String setListName = "aa_" + hasKeyStartsWith(ar.get(0), "aa_outfit", merger).getEDID().substring(14) + bits;
                         LVLI setList = (LVLI) merger.getMajor(setListName, GRUP_TYPE.LVLI);
                         LVLI setList2 = (LVLI) patch.getMajor(setListName, GRUP_TYPE.LVLI);
                         if (setList == null) {
@@ -1063,7 +1059,7 @@ public class ArmorTools {
 
                     }
                 }
-                if ((array.isEmpty()) && (edid.contentEquals("DienesLVLI_Thalmor_Tier_9"))) {
+                if ((array.isEmpty()) && (edid.contentEquals("aa_Thalmor_Tier_9"))) {
                     LVLI subList = new LVLI(edid); //(LVLI) patch.makeCopy(glist, edid);
                     subList.set(LeveledRecord.LVLFlag.UseAll, true);
                     subList.set(LeveledRecord.LVLFlag.CalcAllLevelsEqualOrBelowPC, false);
@@ -1081,7 +1077,7 @@ public class ArmorTools {
                     patch.addRecord(subList);
                     changed = true;
                 }
-                if ((array.isEmpty()) && (edid.contentEquals("DienesLVLI_Necromancer_Tier_0"))) {
+                if ((array.isEmpty()) && (edid.contentEquals("aa_Necromancer_Tier_0"))) {
                     LVLI subList = new LVLI(edid); //(LVLI) patch.makeCopy(glist, edid);
                     subList.set(LeveledRecord.LVLFlag.UseAll, true);
                     subList.set(LeveledRecord.LVLFlag.CalcAllLevelsEqualOrBelowPC, false);
@@ -1095,7 +1091,7 @@ public class ArmorTools {
                     patch.addRecord(subList);
                     changed = true;
                 }
-                if ((array.isEmpty()) && (edid.contentEquals("DienesLVLI_Warlock_Tier_0"))) {
+                if ((array.isEmpty()) && (edid.contentEquals("aa_Warlock_Tier_0"))) {
                     LVLI subList = new LVLI(edid); //(LVLI) patch.makeCopy(glist, edid);
                     subList.set(LeveledRecord.LVLFlag.UseAll, true);
                     subList.set(LeveledRecord.LVLFlag.CalcAllLevelsEqualOrBelowPC, false);
@@ -1542,7 +1538,7 @@ public class ArmorTools {
                     if ((base != null) && (hasVar)) {
                         //SPGlobal.log(obj.getEDID(), "has keyword" + base);
 
-                        String eid = "DienesLVLI" + obj.getEDID();
+                        String eid = "aa_" + obj.getEDID();
                         MajorRecord r;
 
                         r = merger.getMajor(eid, GRUP_TYPE.LVLI);

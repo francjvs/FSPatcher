@@ -172,7 +172,7 @@ public class WeaponTools {
                                     //SPGlobal.log("Enchant found", weapon.getEDID() + "  " + form.getEDID());
                                     String name = generateWeaponName(weapon, form);
                                     String newEdid = generateWeaponEDID(weapon, form);
-                                    WEAP weaponDupe = (WEAP) patch.makeCopy(weapon, "DienesWEAP" + newEdid);
+                                    WEAP weaponDupe = (WEAP) patch.makeCopy(weapon, "aa_WEAP" + newEdid);
                                     //SPGlobal.log("armor copied", weaponDupe.getEDID());
                                     weaponDupe.setEnchantment(form.getEnchantment());
                                     weaponDupe.setEnchantmentCharge(form.getEnchantmentCharge());
@@ -217,7 +217,7 @@ public class WeaponTools {
     static void linkLVLIWeapons(FLST baseWeaponKeysFLST) {
 
         for (LVLI llist : merger.getLeveledItems()) {
-            if (!llist.getEDID().startsWith("DienesLVLI")) {
+            if (!llist.getEDID().startsWith("aa_")) {
                 if (!llist.isEmpty()) {
                     boolean changed = false;
                     for (int i = 0; i < llist.numEntries(); i++) {
@@ -228,7 +228,7 @@ public class WeaponTools {
                             KYWD isBase = weaponHasAnyKeyword(obj, baseWeaponKeysFLST, merger);
                             boolean hasVar = hasVariant(obj);
                             if (hasVar && (isBase != null)) {
-                                String eid = "DienesLVLI" + obj.getEDID();
+                                String eid = "aa_" + obj.getEDID();
                                 MajorRecord r = merger.getMajor(eid, GRUP_TYPE.LVLI);
                                 if (r == null) {
                                     LVLI subList = new LVLI(eid);
@@ -301,7 +301,7 @@ public class WeaponTools {
                     KYWD baseKey = weaponHasAnyKeyword(weapon, baseWeaponKeysFLST, merger);
 
                     if (hasVariant(weapon) && (baseKey != null)) {
-                        String eid = "DienesLVLI" + weapon.getEDID();
+                        String eid = "aa_" + weapon.getEDID();
                         MajorRecord r = merger.getMajor(eid, GRUP_TYPE.LVLI);
                         if (r == null) {
                             LVLI subList = new LVLI(eid);
@@ -340,7 +340,7 @@ public class WeaponTools {
     public static void modLVLIWeapons() {
         for (LVLI llist : merger.getLeveledItems()) {
             String lname = llist.getEDID();
-            if (lname.contains("DienesLVLI")) {
+            if (lname.contains("aa_")) {
                 WEAP weapon = (WEAP) merger.getMajor(llist.getEntry(0).getForm(), GRUP_TYPE.WEAP);
                 if (weapon != null) {
                     if (hasVariant(weapon)) {
@@ -424,7 +424,7 @@ public class WeaponTools {
                     if ((base != null) && (hasVar)) {
                         //SPGlobal.log(obj.getEDID(), "has keyword" + base);
 
-                        String eid = "DienesLVLI" + obj.getEDID();
+                        String eid = "aa_" + obj.getEDID();
                         MajorRecord r;
 
                         r = merger.getMajor(eid, GRUP_TYPE.LVLI);

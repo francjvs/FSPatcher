@@ -147,7 +147,7 @@ public class XMLTools {
                         Element eItem = (Element) items.item(i);
                         if (eItem.getAttribute("EDID").contentEquals(arm.getEDID())) {
                             Element newKey = newDoc.createElement("keyword");
-                            newKey.setTextContent("dienes_outfit_" + master + p.getBase());
+                            newKey.setTextContent("aa_outfit_" + master + p.getBase());
                             eItem.appendChild(newKey);
                             for (Pair<String, ArrayList<String>> q : FSPatcher.tiers) {
                                 if (q.getBase().contentEquals(p.getBase())) {
