@@ -1516,7 +1516,8 @@ public class ArmorTools {
         for (NPC_ actor : merger.getNPCs()) {
             boolean changed = false;
             ArrayList<ItemListing> inventory = new ArrayList<>();
-            for (ItemListing item : inventory) {
+            for (int i=0; i<inventory.size(); i++) {
+                ItemListing item = inventory.get(i);
                 ARMO obj = (ARMO) merger.getMajor(item.getForm(), GRUP_TYPE.ARMO);
                 if (obj != null) {
                     KYWD base = armorHasAnyKeyword(obj, baseArmorKeysFLST, merger);

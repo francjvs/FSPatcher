@@ -416,7 +416,8 @@ public class WeaponTools {
                 actor = (NPC_) patch.getMajor(actor.getForm(), GRUP_TYPE.NPC_);
             }
             ArrayList<ItemListing> inventory = new ArrayList<>();
-            for (ItemListing item : inventory) {
+            for (int i=0; i<inventory.size(); i++) {
+                ItemListing item = inventory.get(i);
                 WEAP obj = (WEAP) merger.getMajor(item.getForm(), GRUP_TYPE.WEAP);
                 if (obj != null) {
                     KYWD base = weaponHasAnyKeyword(obj, baseArmorKeysFLST, merger);
