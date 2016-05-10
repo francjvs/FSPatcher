@@ -18,11 +18,7 @@ public class ArmorTools {
     private static ArrayList<ArrayList<FormID>> armorVariants = new ArrayList<>(0);
     private static ArrayList<Pair<KYWD, ArrayList<ARMO>>> matchingSets = new ArrayList<>(0);
 
-    static void buildOutfitsArmors(FLST baseArmorKeysFLST, Mod merger, Mod patch) {
-        FormID curForm;
-        ARMO curARMO;
-        OTFT curOTFT;
-        
+    static void buildOutfitsArmors(FLST baseArmorKeysFLST, Mod merger, Mod patch) {        
 
         for (OTFT lotft : merger.getOutfits()) {
             String lotftName = lotft.getEDID();
