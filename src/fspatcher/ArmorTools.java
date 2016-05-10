@@ -1514,6 +1514,7 @@ public class ArmorTools {
     static void linkINVArmors (FLST baseArmorKeysFLST, Mod merger, Mod patch) {
     
         for (NPC_ actor : merger.getNPCs()) {
+            //SPGlobal.log(actor.getEDID(), "Start NPC");
             boolean changed = false;
             ArrayList<ItemListing> inventory = actor.getItems();
             for (int i=0; i<inventory.size(); i++) {
@@ -1528,7 +1529,10 @@ public class ArmorTools {
                     // Check if outfit already has shield
                     if (isShield) {
                         OTFT outfit = (OTFT) merger.getMajor(actor.getDefaultOutfit(),GRUP_TYPE.OTFT);
-                        String outfitName = outfit.getEDID();
+                        String outfitName = "";
+                        if (outfit != null) {
+                            outfitName = outfit.getEDID();
+                        }
                         if (needsShield(outfitName)) {
                             // Outfit provides Shield
                             // remove shield and make sure the program skips next part
@@ -1537,7 +1541,6 @@ public class ArmorTools {
                         }
                     }
                     if ((base != null) && (hasVar)) {
-                        //SPGlobal.log(obj.getEDID(), "has keyword" + base);
 
                         String eid = "DienesLVLI" + obj.getEDID();
                         MajorRecord r;
@@ -1547,7 +1550,6 @@ public class ArmorTools {
                             r = patch.getMajor(eid, GRUP_TYPE.LVLI);
                         }
                         if (r != null){
-                            //SPGlobal.log(obj.getEDID(), "sublist found " + r.getEDID());
                             int count = item.getCount();
                             actor.removeItem(item.getForm());
                             actor.addItem(r.getForm(), count);

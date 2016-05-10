@@ -423,7 +423,7 @@ public class WeaponTools {
                     KYWD base = weaponHasAnyKeyword(obj, baseArmorKeysFLST, merger);
                     boolean hasVar = hasVariant(obj);
                     if ((base != null) && (hasVar)) {
-                        //SPGlobal.log(obj.getEDID(), "has keyword" + base);
+                        SPGlobal.log(obj.getEDID(), "has keyword" + base);
 
                         String eid = "DienesLVLI" + obj.getEDID();
                         MajorRecord r;
@@ -433,7 +433,7 @@ public class WeaponTools {
                             r = patch.getMajor(eid, GRUP_TYPE.LVLI);
                         }
                         if (r != null){
-                            //SPGlobal.log(obj.getEDID(), "sublist found " + r.getEDID());
+                            SPGlobal.log(obj.getEDID(), "sublist found " + r.getEDID());
                             int count = item.getCount();
                             actor.removeItem(item.getForm());
                             actor.addItem(r.getForm(), count);
