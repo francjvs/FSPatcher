@@ -415,7 +415,7 @@ public class WeaponTools {
             if (patch.contains(actor.getForm())) {
                 actor = (NPC_) patch.getMajor(actor.getForm(), GRUP_TYPE.NPC_);
             }
-            ArrayList<ItemListing> inventory = new ArrayList<>();
+            ArrayList<ItemListing> inventory = actor.getItems();
             for (int i=0; i<inventory.size(); i++) {
                 ItemListing item = inventory.get(i);
                 WEAP obj = (WEAP) merger.getMajor(item.getForm(), GRUP_TYPE.WEAP);
