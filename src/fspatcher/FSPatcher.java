@@ -269,7 +269,7 @@ public class FSPatcher implements SUM {
     @Override
     public ArrayList<ModListing> requiredMods() {
 	ArrayList<ModListing> req = new ArrayList<>(0);
-        ModListing gearVariants = new ModListing("Lootification", true);
+        ModListing gearVariants = new ModListing("FSConvergence", true);
         req.add(gearVariants);
         return req;
     }
@@ -439,7 +439,7 @@ public class FSPatcher implements SUM {
             for (Mod m : allMods) {
                 String modName = m.getName();
 
-                if (!(modName.contentEquals("Skyrim.esm") || (modName.contentEquals("Lootification.esm")) || modName.contentEquals("HearthFires.esm")
+                if (!(modName.contentEquals("Skyrim.esm") || (modName.contentEquals("FSConvergence.esm")) || modName.contentEquals("HearthFires.esm")
                         || modName.contentEquals("Update.esm") || modName.contentEquals("Dragonborn.esm") || modName.contentEquals("Dawnguard.esm"))) {
                     int numArmors = m.getArmors().size();
                     int numWeapons = m.getWeapons().size();
