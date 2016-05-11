@@ -1528,16 +1528,16 @@ public class ArmorTools {
                     boolean isShield = getSlotKYWD(obj,merger).equals(shield);
                     // Check if outfit already has shield
                     if (isShield) {
-                        OTFT outfit = (OTFT) merger.getMajor(actor.getDefaultOutfit(),GRUP_TYPE.OTFT);
-                        String outfitName = "";
-                        if (outfit != null) {
-                            outfitName = outfit.getEDID();
-                        }
-                        if (needsShield(outfitName)) {
-                            // Outfit provides Shield
-                            // remove shield and make sure the program skips next part
-                            actor.removeItem(item.getForm());
-                            base = null;
+                        FormID outfitID = actor.getDefaultOutfit();
+                        if (!outfitID.isNull()) {
+                            OTFT outfit = (OTFT) merger.getMajor(outfitID,GRUP_TYPE.OTFT);
+                            String outfitName = outfit.getEDID();
+                            if (needsShield(outfitName)) {
+                                // Outfit provides Shield
+                                // remove shield and make sure the program skips next part
+                                actor.removeItem(item.getForm());
+                                base = null;
+                            }
                         }
                     }
                     if ((base != null) && (hasVar)) {

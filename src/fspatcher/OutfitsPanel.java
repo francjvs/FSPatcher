@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class OutfitsPanel extends SPSettingPanel {
 
     private ArrayList<String> outfitKeys;
+    private boolean init;
 
     private class TierListener implements ActionListener {
 
@@ -73,6 +74,30 @@ public class OutfitsPanel extends SPSettingPanel {
             }
         }
     }
+    
+    private class OutfitRemover implements ActionListener {
+        String setKey;
+        
+        OutfitRemover(String k) {
+            setKey = k;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            for (Pair<String, ArrayList<String>> p : FSPatcher.tiers) {
+                if (p.getBase().contentEquals(setKey)) {
+                    FSPatcher.tiers.remove(p);
+                    break;
+                }
+            }
+            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+                if (p.getBase().contentEquals(setKey)) {
+                    FSPatcher.outfits.remove(p);
+                    break;
+                }
+            }
+        }
+    }
 
     public OutfitsPanel(SPMainMenuPanel parent_) {
         super(parent_, "Outfits", FSPatcher.headerColor);
@@ -83,7 +108,7 @@ public class OutfitsPanel extends SPSettingPanel {
         super.initialize();
 
         outfitKeys = new ArrayList<>(0);
-
+        init = false;
 
     }
 
@@ -96,7 +121,9 @@ public class OutfitsPanel extends SPSettingPanel {
                 LPanel panel = new LPanel(275, 200);
                 panel.setSize(300, 500);
 
-                LLabel name = new LLabel(key, FSPatcher.settingsFont, FSPatcher.settingsColor);
+                LLabel name = new LLabel(key, FSPatcher.settingsFont, FSPatcher.settingsColor); // add button to remove outfit
+                // box.addEnterButton("Set", al);
+                // List armors from outfit and add button to remove from outfit
 
                 LComboBox banditHeavy = new LComboBox("Bandit Heavy Tier:");
                 LComboBox banditBoss = new LComboBox("Bandit Boss Tier:");
@@ -172,5 +199,10 @@ public class OutfitsPanel extends SPSettingPanel {
                 Add(panel);
             }
         }
+    }
+    
+    @Override
+    public void onClose(SPMainMenuPanel parent) {
+        this.initialize();
     }
 }

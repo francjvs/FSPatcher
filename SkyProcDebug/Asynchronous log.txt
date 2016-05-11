@@ -1,0 +1,10 @@
+[1]                            [OPEN DEBUG FILE]  Opening Debug File
+[2]                                  [EXCEPTION]  java.lang.NullPointerException
+	at java.io.FileInputStream.<init>(FileInputStream.java:130)
+	at java.io.FileReader.<init>(FileReader.java:72)
+	at skyproc.SPGlobal.getLanguageFromSkyrimIni(SPGlobal.java:118)
+	at skyproc.gui.SUMGUI.handleArgs(SUMGUI.java:516)
+	at skyproc.gui.SUMGUI.open(SUMGUI.java:373)
+	at fspatcher.FSPatcher.main(FSPatcher.java:82)
+
+[3]                                      [DEBUG]  Closing Debug File.  Time was: 16178
