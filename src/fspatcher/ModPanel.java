@@ -199,10 +199,13 @@ public class ModPanel extends SPSettingPanel {
                     q.getVar().add(armor);
                     FSPatcher.outfits.add(q);
                 }
+                field.highlightChanged();
+            } else {
+                field.clearHighlight();
             }
 
 
-            field.highlightChanged();
+            
             setKey = key;
         }
     }

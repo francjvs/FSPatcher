@@ -18,7 +18,6 @@ import java.util.ArrayList;
 public class OutfitsPanel extends SPSettingPanel {
 
     private ArrayList<String> outfitKeys;
-    private boolean init;
 
     private class TierListener implements ActionListener {
 
@@ -98,6 +97,30 @@ public class OutfitsPanel extends SPSettingPanel {
             }
         }
     }
+    
+    private class ArmorRemover implements ActionListener {
+        String setKey;
+        ARMO armor;
+        
+        ArmorRemover(String k, ARMO a) {
+            setKey = k;
+            armor = a;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+                if (p.getBase().contentEquals(setKey)) {
+                    ArrayList<ARMO> alA = p.getVar();
+                    if (alA.contains(armor)) {
+                        alA.remove(armor);
+                    }
+                    p.setVar(alA);
+                    break;
+                }
+            }
+        }
+    }
 
     public OutfitsPanel(SPMainMenuPanel parent_) {
         super(parent_, "Outfits", FSPatcher.headerColor);
@@ -108,12 +131,12 @@ public class OutfitsPanel extends SPSettingPanel {
         super.initialize();
 
         outfitKeys = new ArrayList<>(0);
-        init = false;
 
     }
 
     @Override
     public void onOpen(SPMainMenuPanel parent) {
+        initialize();
         for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
             String key = p.getBase();
             if (!outfitKeys.contains(key)) {
@@ -121,9 +144,11 @@ public class OutfitsPanel extends SPSettingPanel {
                 LPanel panel = new LPanel(275, 200);
                 panel.setSize(300, 500);
 
-                LLabel name = new LLabel(key, FSPatcher.settingsFont, FSPatcher.settingsColor); // add button to remove outfit
+                LLabel name = new LLabel(key, FSPatcher.settingsFont, FSPatcher.settingsColor);
+                
                 // box.addEnterButton("Set", al);
                 // List armors from outfit and add button to remove from outfit
+                
 
                 LComboBox banditHeavy = new LComboBox("Bandit Heavy Tier:");
                 LComboBox banditBoss = new LComboBox("Bandit Boss Tier:");
@@ -170,6 +195,21 @@ public class OutfitsPanel extends SPSettingPanel {
 
                 panel.add(name, BorderLayout.WEST);
                 panel.setPlacement(name);
+                // add button to remove outfit
+                LButton remout = new LButton("Remove Outfit");
+                remout.addActionListener(new OutfitRemover(key));
+                panel.add(remout);
+                panel.setPlacement(remout);
+                for (ARMO a: p.getVar()) {
+                    LLabel armorLabel = new LLabel(a.getEDID(),FSPatcher.settingsFont, FSPatcher.settingsColor);
+                    panel.add(armorLabel);
+                    panel.setPlacement(armorLabel);
+                    
+                    LButton remarm = new LButton("Remove");
+                    remarm.addActionListener(new ArmorRemover(key,a));
+                    panel.add(remarm);
+                    panel.setPlacement(remarm);
+                }
                 panel.add(banditHLabel);
                 panel.setPlacement(banditHLabel);
                 panel.add(banditHeavy);
@@ -203,6 +243,6 @@ public class OutfitsPanel extends SPSettingPanel {
     
     @Override
     public void onClose(SPMainMenuPanel parent) {
-        this.initialize();
+        this.removeAll();
     }
 }
