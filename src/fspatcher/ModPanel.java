@@ -24,7 +24,7 @@ public class ModPanel extends SPSettingPanel {
     private ArrayList<LComboBox> weaponBoxes;
     private ArrayList<ArmorListener> armorListeners;
     private ArrayList<WeaponListener> weaponListeners;
-    private ArrayList<OutfitListener> outfitListeners;
+    private static ArrayList<OutfitListener> outfitListeners;
 
     private class ArmorListener implements ActionListener {
 
@@ -187,7 +187,11 @@ public class ModPanel extends SPSettingPanel {
                     if (p.getBase().contentEquals(setKey)) {
                         p.getVar().remove(armor);
                     }
+                    if (p.getVar().isEmpty()) {
+                        FSPatcher.outfits.remove(p);
+                    }
                 }
+                field.clearHighlight();
             }
 
             if (!key.contentEquals("")) {
@@ -207,12 +211,10 @@ public class ModPanel extends SPSettingPanel {
                     q.getVar().add(armor);
                     FSPatcher.outfits.add(q);
                 }
-                setKey = key;
+                
                 field.highlightChanged();
-            } else {
-                setKey = null;
-                field.clearHighlight();
             }
+            setKey = key;
         }
     }
 
@@ -312,6 +314,7 @@ public class ModPanel extends SPSettingPanel {
                     LTextField outfitField = new LTextField("Outfit name");
                     OutfitListener ol = new OutfitListener(outfitField, armor);
                     outfitListeners.add(ol);
+                    
                     outfitField.addEnterButton("set", ol);
                     outfitField.setSize(250, 30);
                     outfitField.setText("");
@@ -374,21 +377,24 @@ public class ModPanel extends SPSettingPanel {
     
     public void FindRemoveOutfit(String setKey, ActionEvent e) {
         for (OutfitListener ol : outfitListeners) {
-            if (ol.setKey.equals(setKey)) {
-                ol.field.setText("");
-                ol.setKey = null;
-                ol.field.clearHighlight();
+            if(ol.setKey != null) {
+                if(ol.setKey.equals(setKey)) {
+                    ol.field.setText("");
+                    ol.actionPerformed(e);
+                }
             }
         }
     }
     
     public void FindRemoveArmor(String setKey, ARMO a, ActionEvent e) {
         for (OutfitListener ol : outfitListeners) {
-            if (ol.setKey.equals(setKey) && ol.armor.equals(a)) {
-                ol.field.setText("");
-                ol.setKey = null;
-                ol.field.clearHighlight();
+            if(ol.setKey != null) {
+                if (ol.setKey.equals(setKey) && ol.armor.equals(a)) {
+                    ol.field.setText("");
+                    ol.actionPerformed(e);
+                }
             }
+                
         }
     }
 }

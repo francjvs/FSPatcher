@@ -103,31 +103,41 @@ public class OutfitsPanel extends SPSettingPanel {
     
     private class ArmorRemover implements ActionListener {
         String setKey;
-        ARMO armor;
+        LComboBox box;
         
-        ArmorRemover(String k, ARMO a) {
+        ArmorRemover(String k, LComboBox b) {
             setKey = k;
-            armor = a;
+            box = b;
         }
         
         @Override
         public void actionPerformed(ActionEvent e) {
-            for (ModPanel mp : FSPatcher.modPanels) {
-                mp.FindRemoveArmor(setKey, armor, e);
-            }
+            String armorEDID = (String) box.getSelectedItem();
+            ARMO armor = null;
             for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
                 if (p.getBase().contentEquals(setKey)) {
-                    p.getVar().remove(armor);
-                    if (p.getVar().isEmpty()) {
-                        for (Pair<String, ArrayList<String>> pt : FSPatcher.tiers) {
-                            if (pt.getBase().contentEquals(setKey)) {
-                                FSPatcher.tiers.remove(pt);
-                                break;
-                            }
+                    for (ARMO a : p.getVar()) {
+                        if (a.getEDID().equals(armorEDID)) {
+                            armor = a;
+                            break;
                         }
-                        FSPatcher.outfits.remove(p);
                     }
-                    break;
+                    if (armor != null) {
+                        p.getVar().remove(armor);
+                        if (p.getVar().isEmpty()) {
+                            for (Pair<String, ArrayList<String>> pt : FSPatcher.tiers) {
+                                if (pt.getBase().contentEquals(setKey)) {
+                                    FSPatcher.tiers.remove(pt);
+                                    break;
+                                }
+                            }
+                            FSPatcher.outfits.remove(p);
+                        }
+                        for (ModPanel mp : FSPatcher.modPanels) {
+                            mp.FindRemoveArmor(setKey, armor, e);
+                        }
+                        break;
+                    }
                 }
             }
         }
@@ -147,13 +157,13 @@ public class OutfitsPanel extends SPSettingPanel {
 
     @Override
     public void onOpen(SPMainMenuPanel parent) {
-        initialize();
+        //initialize();
         for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
             String key = p.getBase();
             if (!outfitKeys.contains(key)) {
                 outfitKeys.add(key);
                 LPanel panel = new LPanel(275, 200);
-                panel.setSize(300, 500);
+                panel.setSize(300, 600);
 
                 LLabel name = new LLabel(key, FSPatcher.settingsFont, FSPatcher.settingsColor);
                 
@@ -206,21 +216,23 @@ public class OutfitsPanel extends SPSettingPanel {
 
                 panel.add(name, BorderLayout.WEST);
                 panel.setPlacement(name);
+                
                 // add button to remove outfit
                 LButton remout = new LButton("Remove Outfit");
                 remout.addActionListener(new OutfitRemover(key));
                 panel.add(remout);
                 panel.setPlacement(remout);
+                
+                // Add Combo box with armors from outfit and button to remove individual pieces
+                LComboBox outfitArmor = new LComboBox("Armor:");
                 for (ARMO a: p.getVar()) {
-                    LLabel armorLabel = new LLabel(a.getEDID(),FSPatcher.settingsFont, FSPatcher.settingsColor);
-                    panel.add(armorLabel);
-                    panel.setPlacement(armorLabel);
-                    
-                    LButton remarm = new LButton("Remove");
-                    remarm.addActionListener(new ArmorRemover(key,a));
-                    panel.add(remarm);
-                    panel.setPlacement(remarm);
+                    outfitArmor.addItem(a.getEDID());
                 }
+                outfitArmor.addEnterButton("Remove", new ArmorRemover(key,outfitArmor));
+                outfitArmor.setSize(200, 25);
+                panel.add(outfitArmor);
+                panel.setPlacement(outfitArmor);
+                
                 panel.add(banditHLabel);
                 panel.setPlacement(banditHLabel);
                 panel.add(banditHeavy);
@@ -255,5 +267,6 @@ public class OutfitsPanel extends SPSettingPanel {
     @Override
     public void onClose(SPMainMenuPanel parent) {
         this.removeAll();
+        this.initialized = false;
     }
 }
