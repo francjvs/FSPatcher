@@ -89,11 +89,14 @@ public class OutfitsPanel extends SPSettingPanel {
                     break;
                 }
             }
-            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+            /*for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
                 if (p.getBase().contentEquals(setKey)) {
                     FSPatcher.outfits.remove(p);
                     break;
                 }
+            }*/
+            for (ModPanel mp : FSPatcher.modPanels) {
+                mp.FindRemoveOutfit(setKey, e);
             }
         }
     }
@@ -109,15 +112,8 @@ public class OutfitsPanel extends SPSettingPanel {
         
         @Override
         public void actionPerformed(ActionEvent e) {
-            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
-                if (p.getBase().contentEquals(setKey)) {
-                    ArrayList<ARMO> alA = p.getVar();
-                    if (alA.contains(armor)) {
-                        alA.remove(armor);
-                    }
-                    p.setVar(alA);
-                    break;
-                }
+            for (ModPanel mp : FSPatcher.modPanels) {
+                mp.FindRemoveArmor(setKey, armor, e);
             }
         }
     }

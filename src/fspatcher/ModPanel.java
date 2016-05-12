@@ -24,6 +24,7 @@ public class ModPanel extends SPSettingPanel {
     private ArrayList<LComboBox> weaponBoxes;
     private ArrayList<ArmorListener> armorListeners;
     private ArrayList<WeaponListener> weaponListeners;
+    private ArrayList<OutfitListener> outfitListeners;
 
     private class ArmorListener implements ActionListener {
 
@@ -135,6 +136,9 @@ public class ModPanel extends SPSettingPanel {
             for (WeaponListener a : weaponListeners) {
                 a.actionPerformed(e);
             }
+            for (OutfitListener a : outfitListeners) {
+                a.actionPerformed(e);
+            }
         }
     }
 
@@ -154,6 +158,10 @@ public class ModPanel extends SPSettingPanel {
             }
             for (WeaponListener a : weaponListeners) {
                 a.box.setSelectedIndex(0);
+                a.actionPerformed(e);
+            }
+            for (OutfitListener a : outfitListeners) {
+                a.field.setText("");
                 a.actionPerformed(e);
             }
         }
@@ -254,6 +262,7 @@ public class ModPanel extends SPSettingPanel {
             weaponBoxes = new ArrayList<>(0);
             armorListeners = new ArrayList<>(0);
             weaponListeners = new ArrayList<>(0);
+            outfitListeners = new ArrayList<>(0);
 
             for (FormID f : variantArmorKeys) {
                 MajorRecord maj = FSPatcher.gearVariants.getMajor(f, GRUP_TYPE.KYWD);
@@ -303,9 +312,11 @@ public class ModPanel extends SPSettingPanel {
                     panel.setPlacement(box);
 
                     LTextField outfitField = new LTextField("Outfit name");
-                    outfitField.addEnterButton("set", new OutfitListener(outfitField, armor));
+                    OutfitListener ol = new OutfitListener(outfitField, armor);
+                    outfitListeners.add(ol);
+                    outfitField.addEnterButton("set", ol);
                     outfitField.setSize(250, 30);
-                    outfitField.setText(armor.getEDID());
+                    outfitField.setText("");
 
                     panel.Add(outfitField);
                     panel.setPlacement(outfitField);
@@ -361,5 +372,23 @@ public class ModPanel extends SPSettingPanel {
             }
         }
 
+    }
+    
+    public void FindRemoveOutfit(String setKey, ActionEvent e) {
+        for (OutfitListener ol : outfitListeners) {
+            if (ol.setKey.equals(setKey)) {
+                ol.field.setText("");
+                ol.actionPerformed(e);
+            }
+        }
+    }
+    
+    public void FindRemoveArmor(String setKey, ARMO a, ActionEvent e) {
+        for (OutfitListener ol : outfitListeners) {
+            if (ol.setKey.equals(setKey) && ol.armor.equals(a)) {
+                ol.field.setText("");
+                ol.actionPerformed(e);
+            }
+        }
     }
 }
