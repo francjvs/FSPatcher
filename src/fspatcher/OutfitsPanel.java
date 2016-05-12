@@ -89,12 +89,12 @@ public class OutfitsPanel extends SPSettingPanel {
                     break;
                 }
             }
-            /*for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
                 if (p.getBase().contentEquals(setKey)) {
                     FSPatcher.outfits.remove(p);
                     break;
                 }
-            }*/
+            }
             for (ModPanel mp : FSPatcher.modPanels) {
                 mp.FindRemoveOutfit(setKey, e);
             }
@@ -114,6 +114,21 @@ public class OutfitsPanel extends SPSettingPanel {
         public void actionPerformed(ActionEvent e) {
             for (ModPanel mp : FSPatcher.modPanels) {
                 mp.FindRemoveArmor(setKey, armor, e);
+            }
+            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+                if (p.getBase().contentEquals(setKey)) {
+                    p.getVar().remove(armor);
+                    if (p.getVar().isEmpty()) {
+                        for (Pair<String, ArrayList<String>> pt : FSPatcher.tiers) {
+                            if (pt.getBase().contentEquals(setKey)) {
+                                FSPatcher.tiers.remove(pt);
+                                break;
+                            }
+                        }
+                        FSPatcher.outfits.remove(p);
+                    }
+                    break;
+                }
             }
         }
     }

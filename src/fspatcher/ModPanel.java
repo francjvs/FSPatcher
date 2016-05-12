@@ -207,14 +207,12 @@ public class ModPanel extends SPSettingPanel {
                     q.getVar().add(armor);
                     FSPatcher.outfits.add(q);
                 }
+                setKey = key;
                 field.highlightChanged();
             } else {
+                setKey = null;
                 field.clearHighlight();
             }
-
-
-            
-            setKey = key;
         }
     }
 
@@ -378,7 +376,8 @@ public class ModPanel extends SPSettingPanel {
         for (OutfitListener ol : outfitListeners) {
             if (ol.setKey.equals(setKey)) {
                 ol.field.setText("");
-                ol.actionPerformed(e);
+                ol.setKey = null;
+                ol.field.clearHighlight();
             }
         }
     }
@@ -387,7 +386,8 @@ public class ModPanel extends SPSettingPanel {
         for (OutfitListener ol : outfitListeners) {
             if (ol.setKey.equals(setKey) && ol.armor.equals(a)) {
                 ol.field.setText("");
-                ol.actionPerformed(e);
+                ol.setKey = null;
+                ol.field.clearHighlight();
             }
         }
     }
