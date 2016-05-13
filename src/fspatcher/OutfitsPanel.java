@@ -9,6 +9,8 @@ import lev.gui.*;
 import skyproc.gui.*;
 import skyproc.*;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 /**
@@ -164,6 +166,8 @@ public class OutfitsPanel extends SPSettingPanel {
                 outfitKeys.add(key);
                 LPanel panel = new LPanel(275, 200);
                 panel.setSize(300, 600);
+                
+                ArrayList<Component> cToDraw = new ArrayList<>(0);
 
                 LLabel name = new LLabel(key, FSPatcher.settingsFont, FSPatcher.settingsColor);
                 
@@ -213,6 +217,7 @@ public class OutfitsPanel extends SPSettingPanel {
                 LLabel thalmorLabel = new LLabel("Thalmor Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
                 LLabel necroLabel = new LLabel("Necromancer Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
                 LLabel lockLabel = new LLabel("Warlock Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
+                /*            ADD THE REST            */
 
                 panel.add(name, BorderLayout.WEST);
                 panel.setPlacement(name);
@@ -233,30 +238,58 @@ public class OutfitsPanel extends SPSettingPanel {
                 panel.add(outfitArmor);
                 panel.setPlacement(outfitArmor);
                 
+                /*Rectangle r;
                 panel.add(banditHLabel);
                 panel.setPlacement(banditHLabel);
                 panel.add(banditHeavy);
                 panel.setPlacement(banditHeavy);
+                moveObject(banditHeavy,-10);
                 panel.add(banditBLabel);
                 panel.setPlacement(banditBLabel);
+                moveObject(banditBLabel,-20);
                 panel.add(banditBoss);
                 panel.setPlacement(banditBoss);
+                moveObject(banditBoss,-30);
                 panel.add(banditLLabel);
                 panel.setPlacement(banditLLabel);
+                moveObject(banditLLabel,-40);
                 panel.add(banditLight);
                 panel.setPlacement(banditLight);
+                moveObject(banditLight,-50);
                 panel.add(thalmorLabel);
                 panel.setPlacement(thalmorLabel);
+                moveObject(thalmorLabel,-60);
                 panel.add(thalmor);
                 panel.setPlacement(thalmor);
+                moveObject(thalmor,-70);
                 panel.add(necroLabel);
                 panel.setPlacement(necroLabel);
+                moveObject(necroLabel,-80);
                 panel.add(necromancer);
                 panel.setPlacement(necromancer);
+                moveObject(necromancer,-90);
                 panel.add(lockLabel);
                 panel.setPlacement(lockLabel);
+                moveObject(lockLabel,-100);
                 panel.add(warlock);
                 panel.setPlacement(warlock);
+                moveObject(warlock,-110);*/
+                
+                cToDraw.add(banditHLabel);
+                cToDraw.add(banditHeavy);
+                cToDraw.add(banditBLabel);
+                cToDraw.add(banditBoss);
+                cToDraw.add(banditLLabel);
+                cToDraw.add(banditLight);
+                cToDraw.add(thalmorLabel);
+                cToDraw.add(thalmor);
+                cToDraw.add(necroLabel);
+                cToDraw.add(necromancer);
+                cToDraw.add(lockLabel);
+                cToDraw.add(warlock);
+                
+                drawComponents(panel,cToDraw,10);
+                
 
                 setPlacement(panel);
                 Add(panel);
@@ -266,7 +299,23 @@ public class OutfitsPanel extends SPSettingPanel {
     
     @Override
     public void onClose(SPMainMenuPanel parent) {
-        this.removeAll();
-        this.initialized = false;
+        this.updateUI();
+        //this.initialized = false;
+    }
+    
+    private void moveObject(Component l, int Dy) {
+        Rectangle r = l.getBounds();
+        r.y += Dy;
+        l.setBounds(r);
+    }
+    
+    private void drawComponents (LPanel panel, ArrayList<Component> list, int dY) {
+        for (int i = 0;i<list.size();i++){
+            Component cpn = list.get(i);
+            panel.add(cpn);
+            panel.setPlacement(cpn);
+            moveObject(cpn,-dY*i);
+        }
+        
     }
 }

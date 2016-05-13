@@ -5,6 +5,7 @@
 package fspatcher;
 
 import java.awt.BorderLayout;
+import java.awt.Rectangle;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -445,9 +446,13 @@ public class ModPanel extends SPSettingPanel {
                     factbox.addEnterButton("Set/Unset", new FactionListener(weapon,factbox));
                     factbox.setSize(250, 30);
                     panel.add(factbox);
+                    
                     panel.setPlacement(factbox);
-
+                    Rectangle r = factbox.getBounds();
+                    r.y -= 20;
+                    factbox.setBounds(r);
                     setPlacement(panel);
+                    
                     Add(panel);
                 }
             }
