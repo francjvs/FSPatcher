@@ -160,7 +160,7 @@ public class XMLTools {
             }
 
             /* Add Outfit Keys to XML */
-            /* For every Mod Configured */
+            /* For every Outfit Configured */
             for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
                 //String master = p.getVar().get(0).getFormMaster().print();
                 //master = master.substring(0, master.length() - 4);
@@ -193,6 +193,60 @@ public class XMLTools {
             }
             
             /* Add Faction Weapon Keys to XML */
+            /* For Every Faction Configured */
+            for (Pair<String, ArrayList<WEAP>> p : FSPatcher.factWeapons) {
+                /* For Every Weapon in Faction */
+                for (WEAP weap : p.getVar()) {
+                    String modName = weap.getFormMaster().print();
+                    Node theMod = null;
+                    boolean found = false;
+                    /* Check if Mod is already created in XML */
+                    for (Pair<String, Node> q : modNodes) {
+                        if (modName.contentEquals(q.getBase())) {
+                            theMod = q.getVar();
+                            found = true;
+                            break;
+                        }
+                    }
+                    /* If not creates Mod in XML */
+                    if (!found) {
+                        Element newElement = newDoc.createElement("mod");
+                        newElement.setAttribute("modName", modName);
+                        rootElement.appendChild(newElement);
+                        theMod = newElement;
+                        Pair<String, Node> q = new Pair<>(newElement.getAttribute("modName"), theMod);
+                        modNodes.add(q);
+                    }
+                    
+                    Node theWeapon = null;
+                    NodeList items = theMod.getChildNodes();
+                    boolean weapFound = false;
+                    /* Search for Weapon */
+                    for (int i = 0; i < items.getLength(); i++) {
+                        Node item = items.item(i);
+                        if (item.getNodeType() == Node.ELEMENT_NODE) {
+                            Element eItem = (Element) item;
+                            /* If Weapon is found */
+                            if (eItem.getAttribute("EDID").contentEquals(weap.getEDID())) {
+                                theWeapon = item;
+                                weapFound = true;
+                            }
+                        }
+                    }
+                    /* If it's not found, it's created */
+                    if (!weapFound) {
+                        Element newElement = newDoc.createElement("item");
+                        newElement.setAttribute("type", "weapon");
+                        newElement.setAttribute("EDID", weap.getEDID());
+                        theMod.appendChild(newElement);
+                        theWeapon = newElement;    
+                    }
+                    /* Add Faction Keyword to Weapon */
+                    Element newKey = newDoc.createElement("keyword");
+                    newKey.setTextContent("dienes_faction_" + p.getBase());
+                    theWeapon.appendChild(newKey);
+                }
+            }
             
             newDoc.getDocumentElement().normalize();
 
