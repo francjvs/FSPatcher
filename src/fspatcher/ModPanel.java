@@ -29,7 +29,7 @@ public class ModPanel extends SPSettingPanel {
     private ArrayList<WeaponListener> weaponListeners;
     private static ArrayList<OutfitListener> outfitListeners;
     
-    private final ArrayList<String> FactionKeys = new ArrayList<>(Arrays.asList("Alikr", "OrcStronghold","Thalmor","Imperial","LegateImperial","Guard","Sons","OfficerSons","Wolf"));
+    private final ArrayList<String> FactionKeys = new ArrayList<>(Arrays.asList("Alikr", "OrcStronghold","Thalmor","Imperial","LegateImperial","Guard","Sons","BearSons","Wolf"));
     
 
     private class ArmorListener implements ActionListener {
