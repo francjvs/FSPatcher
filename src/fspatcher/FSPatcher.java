@@ -62,6 +62,7 @@ public class FSPatcher implements SUM {
     public static Mod global;
     public static ArrayList<Pair<String, ArrayList<ARMO>>> outfits = new ArrayList<>(0);
     public static ArrayList<Pair<String, ArrayList<String>>> tiers = new ArrayList<>(0);
+    public static ArrayList<Pair<String, ArrayList<WEAP>>> factWeapons = new ArrayList<>(0);
     public static ArrayList<Pair<Mod, ArrayList<Pair<ARMO, KYWD>>>> modArmors = new ArrayList<>(0);
     public static ArrayList<Pair<Mod, ArrayList<Pair<WEAP, KYWD>>>> modWeapons = new ArrayList<>(0);
     public static boolean listify = false;

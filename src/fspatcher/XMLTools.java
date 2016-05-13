@@ -30,6 +30,12 @@ import skyproc.*;
  */
 public class XMLTools {
     
+    /**
+     *
+     * Adds configured Mods to the XML
+     * 
+     * @param merger
+     */
     public static void addModsToXML(Mod merger) {
         try {
             File fXmlFile = new File("Custom.xml");
@@ -45,10 +51,12 @@ public class XMLTools {
             Element rootElement = newDoc.createElement("lootification");
             newDoc.appendChild(rootElement);
 
-
+            /* Add Armor Keys to XML */
+            /* For every Mod Configured */
             for (Pair<Mod, ArrayList<Pair<ARMO, KYWD>>> p : FSPatcher.modArmors) {
                 boolean found = false;
                 Node theMod = null;
+                /* Check if Mod is already created in XML */
                 for (Pair<String, Node> q : modNodes) {
                     if (p.getBase().getName().contentEquals(q.getBase())) {
                         theMod = q.getVar();
@@ -56,6 +64,7 @@ public class XMLTools {
                         break;
                     }
                 }
+                /* If not creates new MOD in XML */
                 if (!found) {
                     Element newElement = newDoc.createElement("mod");
                     newElement.setAttribute("modName", p.getBase().getName());
@@ -64,10 +73,12 @@ public class XMLTools {
                     Pair<String, Node> q = new Pair<>(newElement.getAttribute("modName"), theMod);
                     modNodes.add(q);
                 }
+                /* For every Configured Armor: */
                 for (Pair<ARMO, KYWD> akPair : p.getVar()) {
                     boolean armorFound = false;
                     Node theArmor = null;
                     NodeList items = theMod.getChildNodes();
+                    /* Checks if armor is already in XML */
                     for (int i = 0; i < items.getLength(); i++) {
                         Node item = items.item(i);
                         if (item.getNodeType() == Node.ELEMENT_NODE) {
@@ -79,6 +90,7 @@ public class XMLTools {
                             }
                         }
                     }
+                    /* IF not it creates armor in XML */
                     if (!armorFound) {
                         Element newElement = newDoc.createElement("item");
                         newElement.setAttribute("type", "armor");
@@ -86,15 +98,19 @@ public class XMLTools {
                         theMod.appendChild(newElement);
                         theArmor = newElement;
                     }
+                    /* Add Armor keyword to Armor */
                     Element key = newDoc.createElement("keyword");
                     key.setTextContent(akPair.getVar().getEDID());
                     theArmor.appendChild(key);
                 }
             }
 
+            /* Add Weapon Keys to XML */
+            /* For every Mod Configured: */
             for (Pair<Mod, ArrayList<Pair<WEAP, KYWD>>> p : FSPatcher.modWeapons) {
                 boolean found = false;
                 Node theMod = null;
+                /* Check if Mod is already created in XML */
                 for (Pair<String, Node> q : modNodes) {
                     if (p.getBase().getName().contentEquals(q.getBase())) {
                         theMod = q.getVar();
@@ -102,6 +118,7 @@ public class XMLTools {
                         break;
                     }
                 }
+                /* If not creates Mod in XML */
                 if (!found) {
                     Element newElement = newDoc.createElement("mod");
                     newElement.setAttribute("modName", p.getBase().getName());
@@ -110,10 +127,12 @@ public class XMLTools {
                     Pair<String, Node> q = new Pair<>(newElement.getAttribute("modName"), theMod);
                     modNodes.add(q);
                 }
+                /* For every Weapon Configured: */
                 for (Pair<WEAP, KYWD> akPair : p.getVar()) {
                     boolean armorFound = false;
                     Node theArmor = null;
                     NodeList items = theMod.getChildNodes();
+                    /* Check if Weapon is already in XML */
                     for (int i = 0; i < items.getLength(); i++) {
                         Node item = items.item(i);
                         if (item.getNodeType() == Node.ELEMENT_NODE) {
@@ -125,6 +144,7 @@ public class XMLTools {
                             }
                         }
                     }
+                    /* If not creates Weapon in XML */
                     if (!armorFound) {
                         Element newElement = newDoc.createElement("item");
                         newElement.setAttribute("type", "weapon");
@@ -132,23 +152,32 @@ public class XMLTools {
                         theMod.appendChild(newElement);
                         theArmor = newElement;
                     }
+                    /* Add Weapon Keyword to weapon */
                     Element key = newDoc.createElement("keyword");
                     key.setTextContent(akPair.getVar().getEDID());
                     theArmor.appendChild(key);
                 }
             }
 
+            /* Add Outfit Keys to XML */
+            /* For every Mod Configured */
             for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
-                String master = p.getVar().get(0).getFormMaster().print();
-                master = master.substring(0, master.length() - 4);
+                //String master = p.getVar().get(0).getFormMaster().print();
+                //master = master.substring(0, master.length() - 4);
+                /* For every Outfit Configured */
                 for (ARMO arm : p.getVar()) {
                     NodeList items = newDoc.getElementsByTagName("item");
+                    /* Find Armor Configured in XML (If armor is not configured it doesn's add it!) */
                     for (int i = 0; i < items.getLength(); i++) {
                         Element eItem = (Element) items.item(i);
+                        /* If armor is found */
                         if (eItem.getAttribute("EDID").contentEquals(arm.getEDID())) {
                             Element newKey = newDoc.createElement("keyword");
-                            newKey.setTextContent("dienes_outfit_" + master + p.getBase());
+                            //newKey.setTextContent("dienes_outfit_" + master + p.getBase());
+                            /* Changed this to allow outfits to have armors from different mods */
+                            newKey.setTextContent("dienes_outfit_" + p.getBase());
                             eItem.appendChild(newKey);
+                            /* Find and add configured Tiers */
                             for (Pair<String, ArrayList<String>> q : FSPatcher.tiers) {
                                 if (q.getBase().contentEquals(p.getBase())) {
                                     for (String s : q.getVar()) {
@@ -162,6 +191,9 @@ public class XMLTools {
                     }
                 }
             }
+            
+            /* Add Faction Weapon Keys to XML */
+            
             newDoc.getDocumentElement().normalize();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -187,10 +219,19 @@ public class XMLTools {
         }
     }
 
+    /**
+     *
+     * Goes through both XML and get's configured Armors, Weapons and Outfits
+     *  to be added to the game
+     * 
+     * @param merger
+     * @param patch
+     */
     public static void processXML(Mod merger, Mod patch) {
         try {
             List<String> lines = Files.readAllLines(FileSystems.getDefault().getPath(SPGlobal.getPluginsTxt()), StandardCharsets.UTF_8);
 
+            /* LOAD XML's AND MERGE THEM */
             File fXmlFile = new File("Lootification.xml");
             File customXmlFile = new File("Custom.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -203,19 +244,25 @@ public class XMLTools {
 
             Document doc = mergeDocs(loot, custom);
             doc.getDocumentElement().normalize();
+            /* --------------------------- */
 
             NodeList nList = doc.getElementsByTagName("mod");
 
+            /* Go through every Mod in the merged XML */
             for (int i = 0; i < nList.getLength(); i++) {
                 Node theMod = nList.item(i);
                 Element eElement = (Element) theMod;
+                /* Check if Mod is in the list OR if user disabled skiping inactive mods */
                 if (lines.contains(eElement.getAttribute("modName")) || !(FSPatcher.save.getBool(YourSaveFile.Settings.SKIP_INACTIVE_MODS))) {
+                    /* Check if is Drangonborn DLC and user allowed Drangonborn to be lootified */
                     if (!eElement.getAttribute("modName").contentEquals("Dragonborn.esm") || (eElement.getAttribute("modName").contentEquals("Dragonborn.esm") && FSPatcher.save.getBool(YourSaveFile.Settings.LOOTIFY_DRAGONBORN))) {
                         NodeList items = theMod.getChildNodes();
+                        /* For every item (Weapon or Armor) in the mod */
                         for (int j = 0; j < items.getLength(); j++) {
                             Node item = items.item(j);
                             if (item.getNodeType() == Node.ELEMENT_NODE) {
                                 Element eItem = (Element) item;
+                                /* WEAPON */
                                 if (eItem.getAttribute("type").contentEquals("weapon")) {
                                     WEAP weapon = (WEAP) merger.getMajor(eItem.getAttribute("EDID"), GRUP_TYPE.WEAP);
                                     if (weapon != null) {
@@ -232,6 +279,7 @@ public class XMLTools {
                                         }
                                     }
                                 } else {
+                                    /* ARMOR */
                                     if (eItem.getAttribute("type").contentEquals("armor")) {
                                         ARMO armor = (ARMO) merger.getMajor(eItem.getAttribute("EDID"), GRUP_TYPE.ARMO);
                                         if (armor != null) {
@@ -266,6 +314,15 @@ public class XMLTools {
 
     }
 
+    /**
+     *
+     * Merges two XML documents into one. In case of conflicting keyword nodes
+     *  the first apearence wins.
+     * 
+     * @param doc1
+     * @param doc2
+     * @return Merged Document
+     */
     public static Document mergeDocs(Document doc1, Document doc2) {
         Document newDoc = null;
         try {

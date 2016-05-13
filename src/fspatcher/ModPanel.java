@@ -7,6 +7,7 @@ package fspatcher;
 import java.awt.BorderLayout;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import lev.gui.*;
 import org.w3c.dom.Node;
 import skyproc.*;
@@ -21,10 +22,15 @@ public class ModPanel extends SPSettingPanel {
     public Mod myMod;
     public ArrayList<Pair<ARMO, KYWD>> armorKeys = new ArrayList<>(0);
     public ArrayList<Pair<WEAP, KYWD>> weaponKeys = new ArrayList<>(0);
+    public ArrayList<Pair<WEAP, KYWD>> weaponFactions = new ArrayList<>(0);
+            
     private ArrayList<LComboBox> weaponBoxes;
     private ArrayList<ArmorListener> armorListeners;
     private ArrayList<WeaponListener> weaponListeners;
     private static ArrayList<OutfitListener> outfitListeners;
+    
+    private final ArrayList<String> FactionKeys = new ArrayList<>(Arrays.asList("Alikr", "OrcStronghold","Thalmor","Imperial","LegateImperial","Guard","Sons","OfficerSons","Wolf"));
+    
 
     private class ArmorListener implements ActionListener {
 
@@ -217,6 +223,68 @@ public class ModPanel extends SPSettingPanel {
             setKey = key;
         }
     }
+    
+    private class FactionListener implements ActionListener {
+
+        private LComboBox box;
+        private WEAP weapon;
+        private ArrayList<String> keys;
+        
+        FactionListener(WEAP a, LComboBox b) {
+            weapon = a;
+            box = b;
+            keys = FactionKeys;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String pressed = (String) box.getSelectedItem();
+            if(!pressed.equals("")) {
+                // IF faction option contains "*" - ACTION is remove from faction
+                if (pressed.startsWith("*")) {
+                    for (Pair<String, ArrayList<WEAP>> p : FSPatcher.factWeapons) {
+                        if (pressed.startsWith(p.getBase())) {
+                            for (WEAP w : p.getVar()) {
+                                if(w.getForm().equals(weapon.getForm())) {
+                                    p.getVar().remove(w);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    // Change option text to reflect change
+                    for (String s : keys) {
+                        if (s.equals(pressed)) {
+                            s = s.replace("*", "");
+                        }
+                    }
+                // IF faction option does not contain "*" - ACTION is add to faction
+                } else {
+                    for (Pair<String, ArrayList<WEAP>> p : FSPatcher.factWeapons) {
+                        if (pressed.startsWith(p.getBase())) {
+                            p.getVar().add(weapon);
+                            break;
+                        }
+                    }
+                    // Change option text to reflect change
+                    for (String s : keys) {
+                        if (s.equals(pressed)) {
+                            s = "*" + s;
+                        }
+                    }
+                }
+                // After ACTION is done and keys list updated box items are replaced with new one
+                box.removeAllItems();
+                for (int i=0;i<keys.size();i++) {
+                    box.addItem(keys.get(i));
+                    if (keys.get(i).startsWith(pressed) || pressed.startsWith(keys.get(i))) {
+                        box.setSelectedIndex(i);
+                    }
+                }
+            }
+        }
+    }
 
     public ModPanel(SPMainMenuPanel parent_, Mod m, Mod g) {
         super(parent_, m.toString(), FSPatcher.headerColor);
@@ -229,6 +297,7 @@ public class ModPanel extends SPSettingPanel {
 
         armorKeys = new ArrayList<>(0);
         weaponKeys = new ArrayList<>(0);
+        weaponFactions = new ArrayList<>(0);
         
         boolean found = false;
         for (Pair<String, Node> p : FSPatcher.lootifiedMods) {
@@ -342,7 +411,7 @@ public class ModPanel extends SPSettingPanel {
                 boolean newItem = weapon.getFormMaster().print().contentEquals(myMod.getName());
                 if (!non_playable && !bound && (enchant.isNull()) && newItem) {
                     LPanel panel = new LPanel(275, 200);
-                    panel.setSize(300, 60);
+                    panel.setSize(300, 80);
                     LLabel weaponName = new LLabel(weapon.getName(), FSPatcher.settingsFont, FSPatcher.settingsColor);
 
 
@@ -366,6 +435,17 @@ public class ModPanel extends SPSettingPanel {
                     panel.setPlacement(box);
 
                     weaponBoxes.add(box);
+                    
+                    LComboBox factbox = new LComboBox("", FSPatcher.settingsFont, FSPatcher.settingsColor);
+                    factbox.addItem("");
+                    for (String s : FactionKeys) {
+                        factbox.addItem(s);
+                    }
+                    box.setSelectedIndex(0);
+                    factbox.addEnterButton("Set/Unset", new FactionListener(weapon,factbox));
+                    factbox.setSize(250, 30);
+                    panel.add(factbox);
+                    panel.setPlacement(factbox);
 
                     setPlacement(panel);
                     Add(panel);
