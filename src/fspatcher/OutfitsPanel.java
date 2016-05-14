@@ -238,43 +238,6 @@ public class OutfitsPanel extends SPSettingPanel {
                 panel.add(outfitArmor);
                 panel.setPlacement(outfitArmor);
                 
-                /*Rectangle r;
-                panel.add(banditHLabel);
-                panel.setPlacement(banditHLabel);
-                panel.add(banditHeavy);
-                panel.setPlacement(banditHeavy);
-                moveObject(banditHeavy,-10);
-                panel.add(banditBLabel);
-                panel.setPlacement(banditBLabel);
-                moveObject(banditBLabel,-20);
-                panel.add(banditBoss);
-                panel.setPlacement(banditBoss);
-                moveObject(banditBoss,-30);
-                panel.add(banditLLabel);
-                panel.setPlacement(banditLLabel);
-                moveObject(banditLLabel,-40);
-                panel.add(banditLight);
-                panel.setPlacement(banditLight);
-                moveObject(banditLight,-50);
-                panel.add(thalmorLabel);
-                panel.setPlacement(thalmorLabel);
-                moveObject(thalmorLabel,-60);
-                panel.add(thalmor);
-                panel.setPlacement(thalmor);
-                moveObject(thalmor,-70);
-                panel.add(necroLabel);
-                panel.setPlacement(necroLabel);
-                moveObject(necroLabel,-80);
-                panel.add(necromancer);
-                panel.setPlacement(necromancer);
-                moveObject(necromancer,-90);
-                panel.add(lockLabel);
-                panel.setPlacement(lockLabel);
-                moveObject(lockLabel,-100);
-                panel.add(warlock);
-                panel.setPlacement(warlock);
-                moveObject(warlock,-110);*/
-                
                 cToDraw.add(banditHLabel);
                 cToDraw.add(banditHeavy);
                 cToDraw.add(banditBLabel);
@@ -290,7 +253,6 @@ public class OutfitsPanel extends SPSettingPanel {
                 
                 drawComponents(panel,cToDraw,10);
                 
-
                 setPlacement(panel);
                 Add(panel);
             }
