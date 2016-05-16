@@ -15,6 +15,7 @@ import fspatcher.YourSaveFile.Settings;
 import java.io.File;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import lev.gui.LPanel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -68,6 +69,7 @@ public class FSPatcher implements SUM {
     public static boolean listify = false;
     public static ArrayList<Pair<String, Node>> lootifiedMods = new ArrayList<>(0);
     public static ArrayList<ModPanel> modPanels = new ArrayList<>(0);
+    public static ArrayList<Pair<String,LPanel>> outfitPanels;
 
     public static enum lk {
         err;

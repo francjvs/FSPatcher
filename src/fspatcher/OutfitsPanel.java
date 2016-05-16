@@ -21,7 +21,7 @@ public class OutfitsPanel extends SPSettingPanel {
 
     private ArrayList<String> outfitKeys;
     private ArrayList<String> tierNames;
-    private ArrayList<Pair<String,LPanel>> outfits;
+    static private ArrayList<Pair<String,LPanel>> outfits;
 
     private class TierListener implements ActionListener {
 
@@ -103,7 +103,7 @@ public class OutfitsPanel extends SPSettingPanel {
             for (ModPanel mp : FSPatcher.modPanels) {
                 mp.FindRemoveOutfit(setKey, e);
             }
-            updatePanel();
+            //updatePanel();
         }
     }
     
@@ -139,7 +139,7 @@ public class OutfitsPanel extends SPSettingPanel {
                                 }
                             }
                             FSPatcher.outfits.remove(p);
-                            updatePanel();
+                            //updatePanel();
                         }
                         for (ModPanel mp : FSPatcher.modPanels) {
                             mp.FindRemoveArmor(setKey, armor, e);
@@ -174,7 +174,10 @@ public class OutfitsPanel extends SPSettingPanel {
 
     @Override
     public void onOpen(SPMainMenuPanel parent) {
-        updatePanel();
+        
+        //LPanel c = (LPanel) parent.getTreeLock();
+        //System.out.println(Arrays.toString(c.getComponents()));
+        updatePanel(parent);
         //initialize();
         for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
             String key = p.getBase();
@@ -203,7 +206,7 @@ public class OutfitsPanel extends SPSettingPanel {
                 panel.setPlacement(remout);
                 
                 // Add Combo box with armors from outfit and button to remove individual pieces
-                LComboBox outfitArmor = new LComboBox("Armor:");
+                LComboBox outfitArmor = new LComboBox(key);
                 for (ARMO a: p.getVar()) {
                     outfitArmor.addItem(a.getEDID());
                 }
@@ -217,7 +220,8 @@ public class OutfitsPanel extends SPSettingPanel {
                     String tierKey = tierName.replace(" ", "");
                     LLabel label = new LLabel(tierName + " Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
                     compList.add(label);
-                    LComboBox box = new LComboBox(tierKey + " Tier:");
+                    LComboBox box = new LComboBox(key+tierKey);
+                    box.setSize(100, 25);
                     box.addItem("None");
                     for (int i = 0; i < 30; i++) {
                         box.addItem(String.valueOf(i));
@@ -251,20 +255,28 @@ public class OutfitsPanel extends SPSettingPanel {
         
     }
     
-    private void updatePanel () {
+    private void updatePanel (SPMainMenuPanel parent) {
         
-        for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
-            if(!outfitKeys.contains(p.getBase())) {
+        for(String k : outfitKeys) {
+            boolean found = false;
+            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+                if (p.getBase().equals(k)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
                 for (Pair<String,LPanel> p1 : outfits) {
-                    if (p1.getBase().equals(p.getBase())) {
-                        p1.getVar().removeAll();
+                    if (p1.getBase().equals(k)) {
+                        parent.remove(p1.getVar());
+                        parent.revalidate();
+                        parent.repaint();
                         outfits.remove(p1);
                         break;
                     }
                 }
             }
         }
-        
     }
     
 }
