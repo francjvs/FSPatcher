@@ -20,6 +20,8 @@ import java.util.ArrayList;
 public class OutfitsPanel extends SPSettingPanel {
 
     private ArrayList<String> outfitKeys;
+    private ArrayList<String> tierNames;
+    private ArrayList<Pair<String,LPanel>> outfits;
 
     private class TierListener implements ActionListener {
 
@@ -27,6 +29,7 @@ public class OutfitsPanel extends SPSettingPanel {
         private String newKey;
         private LComboBox box;
         private String tierName;
+        
 
         TierListener(String a, LComboBox b, String name) {
             set = a;
@@ -100,6 +103,7 @@ public class OutfitsPanel extends SPSettingPanel {
             for (ModPanel mp : FSPatcher.modPanels) {
                 mp.FindRemoveOutfit(setKey, e);
             }
+            updatePanel();
         }
     }
     
@@ -115,9 +119,10 @@ public class OutfitsPanel extends SPSettingPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             String armorEDID = (String) box.getSelectedItem();
-            ARMO armor = null;
+            //ARMO armor = null;
             for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
                 if (p.getBase().contentEquals(setKey)) {
+                    ARMO armor = null;
                     for (ARMO a : p.getVar()) {
                         if (a.getEDID().equals(armorEDID)) {
                             armor = a;
@@ -134,6 +139,7 @@ public class OutfitsPanel extends SPSettingPanel {
                                 }
                             }
                             FSPatcher.outfits.remove(p);
+                            updatePanel();
                         }
                         for (ModPanel mp : FSPatcher.modPanels) {
                             mp.FindRemoveArmor(setKey, armor, e);
@@ -154,11 +160,21 @@ public class OutfitsPanel extends SPSettingPanel {
         super.initialize();
 
         outfitKeys = new ArrayList<>(0);
+        outfits = new ArrayList<>(0);
+        
+        tierNames = new ArrayList<>(0);
+            tierNames.add("Bandit Heavy");
+            tierNames.add("Bandit Light");
+            tierNames.add("Bandit Boss");
+            tierNames.add("Thalmor");
+            tierNames.add("Necromancer");
+            tierNames.add("Warlock");
 
     }
 
     @Override
     public void onOpen(SPMainMenuPanel parent) {
+        updatePanel();
         //initialize();
         for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
             String key = p.getBase();
@@ -167,58 +183,16 @@ public class OutfitsPanel extends SPSettingPanel {
                 LPanel panel = new LPanel(275, 200);
                 panel.setSize(300, 600);
                 
-                ArrayList<Component> cToDraw = new ArrayList<>(0);
+                Pair<String,LPanel> pair = new Pair(key,panel);
+                outfits.add(pair);
+                
+                ArrayList<Component> compList = new ArrayList<>(0);
 
                 LLabel name = new LLabel(key, FSPatcher.settingsFont, FSPatcher.settingsColor);
                 
                 // box.addEnterButton("Set", al);
                 // List armors from outfit and add button to remove from outfit
                 
-
-                LComboBox banditHeavy = new LComboBox("Bandit Heavy Tier:");
-                LComboBox banditBoss = new LComboBox("Bandit Boss Tier:");
-                LComboBox banditLight = new LComboBox("Bandit Light Tier:");
-                LComboBox thalmor = new LComboBox("Thalmor Tier:");
-                LComboBox necromancer = new LComboBox("Necromancer Tier:");
-                LComboBox warlock = new LComboBox("Warlock Tier:");
-
-                banditHeavy.addItem("None");
-                banditBoss.addItem("None");
-                banditLight.addItem("None");
-                thalmor.addItem("None");
-                necromancer.addItem("None");
-                warlock.addItem("None");
-                for (int i = 0; i < 30; i++) {
-                    banditHeavy.addItem(String.valueOf(i));
-                    banditBoss.addItem(String.valueOf(i));
-                    banditLight.addItem(String.valueOf(i));
-                    thalmor.addItem(String.valueOf(i));
-                    necromancer.addItem(String.valueOf(i));
-                    warlock.addItem(String.valueOf(i));
-                }
-
-
-                banditHeavy.addEnterButton("set", new TierListener(key, banditHeavy, "BanditHeavy_Tier_"));
-                banditHeavy.setSize(100, 25);
-                banditBoss.addEnterButton("set", new TierListener(key, banditBoss, "BanditBoss_Tier_"));
-                banditBoss.setSize(100, 25);
-                banditLight.addEnterButton("set", new TierListener(key, banditLight, "BanditLight_Tier_"));
-                banditLight.setSize(100, 25);
-                thalmor.addEnterButton("set", new TierListener(key, thalmor, "Thalmor_Tier_"));
-                thalmor.setSize(100, 25);
-                necromancer.addEnterButton("set", new TierListener(key, necromancer, "Necromancer_Tier_"));
-                necromancer.setSize(100, 25);
-                warlock.addEnterButton("set", new TierListener(key, warlock, "Warlock_Tier_"));
-                warlock.setSize(100, 25);
-
-                LLabel banditHLabel = new LLabel("Bandit Heavy Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
-                LLabel banditBLabel = new LLabel("Bandit Boss Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
-                LLabel banditLLabel = new LLabel("Bandit Light Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
-                LLabel thalmorLabel = new LLabel("Thalmor Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
-                LLabel necroLabel = new LLabel("Necromancer Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
-                LLabel lockLabel = new LLabel("Warlock Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
-                /*            ADD THE REST            */
-
                 panel.add(name, BorderLayout.WEST);
                 panel.setPlacement(name);
                 
@@ -238,31 +212,26 @@ public class OutfitsPanel extends SPSettingPanel {
                 panel.add(outfitArmor);
                 panel.setPlacement(outfitArmor);
                 
-                cToDraw.add(banditHLabel);
-                cToDraw.add(banditHeavy);
-                cToDraw.add(banditBLabel);
-                cToDraw.add(banditBoss);
-                cToDraw.add(banditLLabel);
-                cToDraw.add(banditLight);
-                cToDraw.add(thalmorLabel);
-                cToDraw.add(thalmor);
-                cToDraw.add(necroLabel);
-                cToDraw.add(necromancer);
-                cToDraw.add(lockLabel);
-                cToDraw.add(warlock);
+                // Add Boxes for each type of tier
+                for (String tierName : tierNames) {    
+                    String tierKey = tierName.replace(" ", "");
+                    LLabel label = new LLabel(tierName + " Tier:", FSPatcher.settingsFont, FSPatcher.settingsColor);
+                    compList.add(label);
+                    LComboBox box = new LComboBox(tierKey + " Tier:");
+                    box.addItem("None");
+                    for (int i = 0; i < 30; i++) {
+                        box.addItem(String.valueOf(i));
+                    }
+                    box.addEnterButton("set", new TierListener(key, box, tierKey + "_Tier_"));
+                    compList.add(box);
+                }
                 
-                drawComponents(panel,cToDraw,10);
+                drawComponents(panel, compList, 10);
                 
                 setPlacement(panel);
                 Add(panel);
             }
         }
-    }
-    
-    @Override
-    public void onClose(SPMainMenuPanel parent) {
-        this.updateUI();
-        //this.initialized = false;
     }
     
     private void moveObject(Component l, int Dy) {
@@ -272,6 +241,7 @@ public class OutfitsPanel extends SPSettingPanel {
     }
     
     private void drawComponents (LPanel panel, ArrayList<Component> list, int dY) {
+        
         for (int i = 0;i<list.size();i++){
             Component cpn = list.get(i);
             panel.add(cpn);
@@ -280,4 +250,21 @@ public class OutfitsPanel extends SPSettingPanel {
         }
         
     }
+    
+    private void updatePanel () {
+        
+        for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+            if(!outfitKeys.contains(p.getBase())) {
+                for (Pair<String,LPanel> p1 : outfits) {
+                    if (p1.getBase().equals(p.getBase())) {
+                        p1.getVar().removeAll();
+                        outfits.remove(p1);
+                        break;
+                    }
+                }
+            }
+        }
+        
+    }
+    
 }
