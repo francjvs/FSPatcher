@@ -21,7 +21,7 @@ public class OutfitsPanel extends SPSettingPanel {
 
     private ArrayList<String> outfitKeys;
     private ArrayList<String> tierNames;
-    static private ArrayList<Pair<String,LPanel>> outfits;
+    static private ArrayList<Pair<String,ArrayList<Component>>> outfitComp;
 
     private class TierListener implements ActionListener {
 
@@ -103,7 +103,16 @@ public class OutfitsPanel extends SPSettingPanel {
             for (ModPanel mp : FSPatcher.modPanels) {
                 mp.FindRemoveOutfit(setKey, e);
             }
-            //updatePanel();
+            for (Pair<String,ArrayList<Component>> psc : outfitComp) {
+                if(psc.getBase().equals(setKey)) {
+                    for (Component c : psc.getVar()) {
+                        c.setVisible(false);
+                    }
+                    outfitKeys.remove(setKey);
+                    outfitComp.remove(psc);
+                    break;
+                }
+            }
         }
     }
     
@@ -139,7 +148,6 @@ public class OutfitsPanel extends SPSettingPanel {
                                 }
                             }
                             FSPatcher.outfits.remove(p);
-                            //updatePanel();
                         }
                         for (ModPanel mp : FSPatcher.modPanels) {
                             mp.FindRemoveArmor(setKey, armor, e);
@@ -160,7 +168,7 @@ public class OutfitsPanel extends SPSettingPanel {
         super.initialize();
 
         outfitKeys = new ArrayList<>(0);
-        outfits = new ArrayList<>(0);
+        outfitComp = new ArrayList<>(0);
         
         tierNames = new ArrayList<>(0);
             tierNames.add("Bandit Heavy");
@@ -177,7 +185,6 @@ public class OutfitsPanel extends SPSettingPanel {
         
         //LPanel c = (LPanel) parent.getTreeLock();
         //System.out.println(Arrays.toString(c.getComponents()));
-        updatePanel(parent);
         //initialize();
         for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
             String key = p.getBase();
@@ -186,16 +193,13 @@ public class OutfitsPanel extends SPSettingPanel {
                 LPanel panel = new LPanel(275, 200);
                 panel.setSize(300, 600);
                 
-                Pair<String,LPanel> pair = new Pair(key,panel);
-                outfits.add(pair);
+                //Pair<String,LPanel> pair = new Pair(key,panel);
+                //outfits.add(pair);
                 
                 ArrayList<Component> compList = new ArrayList<>(0);
 
+                // Add Label with Set Keyword
                 LLabel name = new LLabel(key, FSPatcher.settingsFont, FSPatcher.settingsColor);
-                
-                // box.addEnterButton("Set", al);
-                // List armors from outfit and add button to remove from outfit
-                
                 panel.add(name, BorderLayout.WEST);
                 panel.setPlacement(name);
                 
@@ -205,7 +209,7 @@ public class OutfitsPanel extends SPSettingPanel {
                 panel.add(remout);
                 panel.setPlacement(remout);
                 
-                // Add Combo box with armors from outfit and button to remove individual pieces
+                // List armors from outfit and add button to remove from outfit
                 LComboBox outfitArmor = new LComboBox(key);
                 for (ARMO a: p.getVar()) {
                     outfitArmor.addItem(a.getEDID());
@@ -214,6 +218,15 @@ public class OutfitsPanel extends SPSettingPanel {
                 outfitArmor.setSize(200, 25);
                 panel.add(outfitArmor);
                 panel.setPlacement(outfitArmor);
+                
+                // Check if tier has already been set
+                ArrayList<String> setTiers = null;
+                for (Pair<String, ArrayList<String>> pt : FSPatcher.tiers) {
+                    if (pt.getBase().contentEquals(key)) {
+                        setTiers = pt.getVar();
+                        break;
+                    }
+                }
                 
                 // Add Boxes for each type of tier
                 for (String tierName : tierNames) {    
@@ -228,14 +241,42 @@ public class OutfitsPanel extends SPSettingPanel {
                     }
                     box.addEnterButton("set", new TierListener(key, box, tierKey + "_Tier_"));
                     compList.add(box);
+                    
+                    // If tier has already been set and changes UI to reflect that
+                    if (setTiers != null) {
+                        for (String tier : setTiers) {
+                            if(tier.startsWith(tierKey)) {
+                                int index = Integer.parseInt(tier.replaceAll("[\\D]", ""));
+                                box.setSelectedIndex(index + 1); //To bypass "None" entry
+                                box.highlightChanged();
+                                break;
+                            }
+                            break;
+                        }
+                    }
                 }
                 
                 drawComponents(panel, compList, 10);
+                
+                // Store components for UI updates
+                compList.add(name); // Set Label
+                compList.add(remout); // Remove Outfit Button
+                compList.add(outfitArmor); // Remove Armor Button
+                Pair<String,ArrayList<Component>> psc = new Pair(key,compList);
+                outfitComp.add(psc);
                 
                 setPlacement(panel);
                 Add(panel);
             }
         }
+    }
+    
+    @Override
+    public void onClose(SPMainMenuPanel parent) {
+        //removeAll();
+        revalidate();
+        repaint();
+        //initialized = false;
     }
     
     private void moveObject(Component l, int Dy) {
@@ -255,7 +296,7 @@ public class OutfitsPanel extends SPSettingPanel {
         
     }
     
-    private void updatePanel (SPMainMenuPanel parent) {
+    /*private void updatePanel (SPMainMenuPanel parent) {
         
         for(String k : outfitKeys) {
             boolean found = false;
@@ -277,6 +318,6 @@ public class OutfitsPanel extends SPSettingPanel {
                 }
             }
         }
-    }
+    }*/
     
 }
