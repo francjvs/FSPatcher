@@ -18,6 +18,8 @@ import java.util.ArrayList;
  * @author David
  */
 public class OutfitsPanel extends SPSettingPanel {
+    
+    protected int panelHeight = 990;
 
     private ArrayList<String> outfitKeys;
     private ArrayList<String> tierNames;
@@ -88,31 +90,9 @@ public class OutfitsPanel extends SPSettingPanel {
         
         @Override
         public void actionPerformed(ActionEvent e) {
-            for (Pair<String, ArrayList<String>> p : FSPatcher.tiers) {
-                if (p.getBase().contentEquals(setKey)) {
-                    FSPatcher.tiers.remove(p);
-                    break;
-                }
-            }
-            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
-                if (p.getBase().contentEquals(setKey)) {
-                    FSPatcher.outfits.remove(p);
-                    break;
-                }
-            }
-            for (ModPanel mp : FSPatcher.modPanels) {
-                mp.FindRemoveOutfit(setKey, e);
-            }
-            for (Pair<String,ArrayList<Component>> psc : outfitComp) {
-                if(psc.getBase().equals(setKey)) {
-                    for (Component c : psc.getVar()) {
-                        c.setVisible(false);
-                    }
-                    outfitKeys.remove(setKey);
-                    outfitComp.remove(psc);
-                    break;
-                }
-            }
+            deleteOutfit(setKey,null,null);
+            updateModPanels(setKey,null,e);
+            updatePanel(setKey);
         }
     }
     
@@ -141,17 +121,12 @@ public class OutfitsPanel extends SPSettingPanel {
                     if (armor != null) {
                         p.getVar().remove(armor);
                         if (p.getVar().isEmpty()) {
-                            for (Pair<String, ArrayList<String>> pt : FSPatcher.tiers) {
-                                if (pt.getBase().contentEquals(setKey)) {
-                                    FSPatcher.tiers.remove(pt);
-                                    break;
-                                }
-                            }
-                            FSPatcher.outfits.remove(p);
+                            deleteOutfit(setKey,null,p);
+                            updatePanel(setKey);
+                        } else {
+                            updateBox(box,p.getVar());
                         }
-                        for (ModPanel mp : FSPatcher.modPanels) {
-                            mp.FindRemoveArmor(setKey, armor, e);
-                        }
+                        updateModPanels(setKey,armor,e);
                         break;
                     }
                 }
@@ -171,12 +146,22 @@ public class OutfitsPanel extends SPSettingPanel {
         outfitComp = new ArrayList<>(0);
         
         tierNames = new ArrayList<>(0);
-            tierNames.add("Bandit Heavy");
-            tierNames.add("Bandit Light");
-            tierNames.add("Bandit Boss");
-            tierNames.add("Thalmor");
-            tierNames.add("Necromancer");
-            tierNames.add("Warlock");
+            tierNames.add("Alikr");
+            tierNames.add("Dawnguard");
+            tierNames.add("Hunter");
+            tierNames.add("Imperial Soldier");
+            tierNames.add("Imperial Mage");
+            tierNames.add("Imperial Legate");
+            tierNames.add("Imperial Officer");
+            tierNames.add("Orc Stronghold");
+            tierNames.add("Sons Soldier");
+            tierNames.add("Sons Mage");
+            tierNames.add("Sons Officer");
+            tierNames.add("Thalmor Soldier");
+            tierNames.add("Thalmor Mage");
+            tierNames.add("Vigilants");
+            tierNames.add("Guardian");
+            tierNames.add("Adventurer");
 
     }
 
@@ -186,12 +171,26 @@ public class OutfitsPanel extends SPSettingPanel {
         //LPanel c = (LPanel) parent.getTreeLock();
         //System.out.println(Arrays.toString(c.getComponents()));
         //initialize();
+        for (int i = 0; i<outfitKeys.size();i++) {
+            boolean found = false;
+            String k = outfitKeys.get(i);
+            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+                if (p.getBase().equals(k)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                updatePanel(k);
+                outfitKeys.remove(k);
+            }
+        }
         for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
             String key = p.getBase();
             if (!outfitKeys.contains(key)) {
                 outfitKeys.add(key);
                 LPanel panel = new LPanel(275, 200);
-                panel.setSize(300, 600);
+                panel.setSize(300, panelHeight);
                 
                 //Pair<String,LPanel> pair = new Pair(key,panel);
                 //outfits.add(pair);
@@ -259,23 +258,41 @@ public class OutfitsPanel extends SPSettingPanel {
                 drawComponents(panel, compList, 10);
                 
                 // Store components for UI updates
-                compList.add(name); // Set Label
-                compList.add(remout); // Remove Outfit Button
+                //compList.add(name); // Set Label
+                //compList.add(remout); // Remove Outfit Button
+                //compList.add(outfitArmor); // Remove Armor Button
+                compList = new ArrayList<>(0);
+                compList.add(panel); // The Panel
                 compList.add(outfitArmor); // Remove Armor Button
                 Pair<String,ArrayList<Component>> psc = new Pair(key,compList);
                 outfitComp.add(psc);
                 
                 setPlacement(panel);
                 Add(panel);
+            } else {
+                //Update Armor LComboBoxes
+                ArrayList<Component> compList = null;
+                for (Pair<String,ArrayList<Component>> psc : outfitComp) {
+                    if (psc.getBase().contentEquals(key)) {
+                        compList = psc.getVar();
+                        break;
+                    }
+                }
+                if (compList != null) {
+                    LComboBox box = (LComboBox) compList.get(compList.size()-1);
+                    updateBox(box,p.getVar());
+                }
             }
+            
         }
+        
     }
     
     @Override
     public void onClose(SPMainMenuPanel parent) {
         //removeAll();
-        revalidate();
-        repaint();
+        //revalidate();
+        //repaint();
         //initialized = false;
     }
     
@@ -296,28 +313,82 @@ public class OutfitsPanel extends SPSettingPanel {
         
     }
     
-    /*private void updatePanel (SPMainMenuPanel parent) {
+    private void updatePanel (String setKey) {
+        boolean found = false;
+        ArrayList<Component> del = null;
+        for (int i = 0; i < outfitComp.size(); i++) {
+            Pair<String,ArrayList<Component>> psc = outfitComp.get(i);
+            System.out.println(psc.getBase() + " + " + setKey);
+            if(psc.getBase().equals(setKey)) {
+                del = psc.getVar();
+                found = true;
+                for (Component c : psc.getVar()) {
+                    c.setVisible(false);
+                }
+                //break;
+            } else if(found) {
+                LPanel panel = (LPanel) psc.getVar().get(0);
+                panel.setLocation(panel.getX(), panel.getY()-panelHeight-spacing);
+            }
+        }
+        if (found) {
+            last.setLocation(last.getX(), (last.getY()-(double)panelHeight-(double)spacing));
+            outfitKeys.remove(setKey);
+            outfitComp.remove(del); 
+        }
         
-        for(String k : outfitKeys) {
-            boolean found = false;
-            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
-                if (p.getBase().equals(k)) {
-                    found = true;
+        
+        
+    }
+    
+    /**
+     * Removes the outfit from memory. They can be introduced directly
+     * or give null param to make the function find them using the setKey
+     * param
+     *
+     * @param setKey Key from the outfit to be removed
+     * @param tier Pair<String, ArrayList<String>> from the tier list
+     * @param outfit Pair<String, ArrayList<ARMO>> from the outfit list
+     */
+    private void deleteOutfit(String setKey, Pair<String, ArrayList<String>> tier, Pair<String, ArrayList<ARMO>> outfit) {
+        if (tier != null) {    
+            for (Pair<String, ArrayList<String>> p : FSPatcher.tiers) {
+                if (p.getBase().contentEquals(setKey)) {
+                    FSPatcher.tiers.remove(p);
                     break;
                 }
             }
-            if (!found) {
-                for (Pair<String,LPanel> p1 : outfits) {
-                    if (p1.getBase().equals(k)) {
-                        parent.remove(p1.getVar());
-                        parent.revalidate();
-                        parent.repaint();
-                        outfits.remove(p1);
-                        break;
-                    }
+        } else {
+            FSPatcher.tiers.remove(tier);
+        }
+        if (outfit != null) {
+            for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+                if (p.getBase().contentEquals(setKey)) {
+                    FSPatcher.outfits.remove(p);
+                    break;
                 }
             }
+        } else {
+            FSPatcher.outfits.remove(outfit);
         }
-    }*/
+
+    }
+    
+    private void updateModPanels (String setKey, ARMO armor,ActionEvent e) {
+        for (ModPanel mp : FSPatcher.modPanels) {
+            if (armor == null) {
+                mp.FindRemoveOutfit(setKey, e);
+            } else {
+                mp.FindRemoveArmor(setKey, armor, e);
+            }
+        }
+    }
+    
+    private void updateBox (LComboBox box, ArrayList<ARMO> list) {
+        box.removeAllItems();
+        for (ARMO a : list) {
+            box.addItem(a.getEDID());
+        }
+    }
     
 }

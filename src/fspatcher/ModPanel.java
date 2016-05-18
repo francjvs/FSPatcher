@@ -190,12 +190,16 @@ public class ModPanel extends SPSettingPanel {
         public void actionPerformed(ActionEvent e) {
             String key = field.getText();
             if (setKey != null || key.contentEquals("")) {
-                for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+                for (int i = 0; i<FSPatcher.outfits.size(); i++) {
+                    Pair<String, ArrayList<ARMO>> p = FSPatcher.outfits.get(i);
                     if (p.getBase().contentEquals(setKey)) {
                         p.getVar().remove(armor);
                     }
                     if (p.getVar().isEmpty()) {
                         FSPatcher.outfits.remove(p);
+                        if(FSPatcher.outfits.isEmpty()){
+                            break;
+                        }
                     }
                 }
                 field.clearHighlight();
@@ -203,25 +207,26 @@ public class ModPanel extends SPSettingPanel {
 
             if (!key.contentEquals("")) {
                 boolean found = false;
-                if (setKey != null) {
-                    for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
-                        if (p.getBase().contentEquals(setKey)) {
-                            if (!p.getVar().contains(armor)) {
-                                p.getVar().add(armor);
-                            }
-                            found = true;
+                
+                for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
+                    if (p.getBase().contentEquals(key)) {
+                        if (!p.getVar().contains(armor)) {
+                            p.getVar().add(armor);
                         }
+                        found = true;
                     }
                 }
+                
                 if (!found) {
                     Pair<String, ArrayList<ARMO>> q = new Pair<>(key, new ArrayList<ARMO>(0));
                     q.getVar().add(armor);
                     FSPatcher.outfits.add(q);
                 }
-                
+                setKey = key;
                 field.highlightChanged();
+            } else {
+                setKey = null;
             }
-            setKey = key;
         }
     }
     
@@ -240,6 +245,7 @@ public class ModPanel extends SPSettingPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             String pressed = (String) box.getSelectedItem();
+            int index = 0;
             if(!pressed.equals("")) {
                 // IF faction option contains "*" - ACTION is remove from faction
                 if (pressed.startsWith("*")) {
@@ -255,9 +261,13 @@ public class ModPanel extends SPSettingPanel {
                         }
                     }
                     // Change option text to reflect change
-                    for (String s : keys) {
+                    for (int i=0; i<keys.size(); i++) {
+                        String s = keys.get(i);
                         if (s.equals(pressed)) {
                             s = s.replace("*", "");
+                            keys.remove(i);
+                            keys.add(i, s);
+                            index = i;
                         }
                     }
                 // IF faction option does not contain "*" - ACTION is add to faction
@@ -269,20 +279,31 @@ public class ModPanel extends SPSettingPanel {
                         }
                     }
                     // Change option text to reflect change
-                    for (String s : keys) {
+                    for (int i=0; i<keys.size(); i++) {
+                        String s = keys.get(i);
                         if (s.equals(pressed)) {
                             s = "*" + s;
+                            keys.remove(i);
+                            keys.add(i, s);
+                            index = i;
                         }
                     }
                 }
                 // After ACTION is done and keys list updated box items are replaced with new one
                 box.removeAllItems();
+                int count = 0;
                 for (int i=0;i<keys.size();i++) {
                     box.addItem(keys.get(i));
-                    if (keys.get(i).startsWith(pressed) || pressed.startsWith(keys.get(i))) {
-                        box.setSelectedIndex(i);
+                    if (keys.get(i).contains("*")) {
+                        count++;
                     }
                 }
+                if(count > 0) {
+                    box.highlightChanged();
+                } else if (count == 0) {
+                    box.clearHighlight();
+                }
+                box.setSelectedIndex(index);
             }
         }
     }

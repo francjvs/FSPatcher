@@ -5,6 +5,8 @@
  */
 package fspatcher;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author David Tynan
@@ -35,5 +37,18 @@ public class Pair<L, R> {
 
     public void setVar(R r) {
         this.r = r;
+    }
+    
+    public boolean baseContains(ArrayList<Pair<L, R>> list, L l1) {
+        boolean found = false;
+        
+        for (Pair<L, R> p : list) {
+            if (p.getBase().equals(l1)) {
+                found = true;
+                break;
+            }
+        }
+        
+        return found;
     }
 }
