@@ -13,6 +13,7 @@ import skyproc.gui.SUM;
 import skyproc.gui.SUMGUI;
 import fspatcher.YourSaveFile.Settings;
 import java.io.File;
+import java.util.Arrays;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import lev.gui.LPanel;
@@ -63,7 +64,8 @@ public class FSPatcher implements SUM {
     public static Mod global;
     public static ArrayList<Pair<String, ArrayList<ARMO>>> outfits = new ArrayList<>(0);
     public static ArrayList<Pair<String, ArrayList<String>>> tiers = new ArrayList<>(0);
-    public static ArrayList<Pair<String, ArrayList<WEAP>>> factWeapons = new ArrayList<>(0);
+    public static ArrayList<Pair<String, ArrayList<Pair<String,Integer>>>> factWeapons = new ArrayList<>(0);
+    public static ArrayList<String> FactionKeys = new ArrayList<>(Arrays.asList("Alikr", "OrcStronghold","Thalmor","Imperial","LegateImperial","Guard","Sons","BearSons","Wolf"));
     public static ArrayList<Pair<Mod, ArrayList<Pair<ARMO, KYWD>>>> modArmors = new ArrayList<>(0);
     public static ArrayList<Pair<Mod, ArrayList<Pair<WEAP, KYWD>>>> modWeapons = new ArrayList<>(0);
     public static boolean listify = false;
@@ -260,6 +262,13 @@ public class FSPatcher implements SUM {
             if (!found) {
                 lootifiedMods.add(p);
             }
+        }
+        
+        // Create Weapon Faction placeholders
+        for (String s : FSPatcher.FactionKeys) {
+            ArrayList<Pair<String,Integer>> p2 = new ArrayList<>(0);
+            Pair<String, ArrayList<Pair<String,Integer>>> p1 = new Pair<>(s,p2);
+            factWeapons.add(p1);
         }
         
     }

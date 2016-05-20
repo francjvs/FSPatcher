@@ -30,8 +30,6 @@ public class ModPanel extends SPSettingPanel {
     private ArrayList<WeaponListener> weaponListeners;
     private static ArrayList<OutfitListener> outfitListeners;
     
-    private final ArrayList<String> FactionKeys = new ArrayList<>(Arrays.asList("Alikr", "OrcStronghold","Thalmor","Imperial","LegateImperial","Guard","Sons","BearSons","Wolf"));
-    
 
     private class ArmorListener implements ActionListener {
 
@@ -239,7 +237,7 @@ public class ModPanel extends SPSettingPanel {
         FactionListener(WEAP a, LComboBox b) {
             weapon = a;
             box = b;
-            keys = FactionKeys;
+            keys = FSPatcher.FactionKeys;
         }
 
         @Override
@@ -249,11 +247,11 @@ public class ModPanel extends SPSettingPanel {
             if(!pressed.equals("")) {
                 // IF faction option contains "*" - ACTION is remove from faction
                 if (pressed.startsWith("*")) {
-                    for (Pair<String, ArrayList<WEAP>> p : FSPatcher.factWeapons) {
-                        if (pressed.startsWith(p.getBase())) {
-                            for (WEAP w : p.getVar()) {
-                                if(w.getForm().equals(weapon.getForm())) {
-                                    p.getVar().remove(w);
+                    for (Pair<String, ArrayList<Pair<String,Integer>>> p1 : FSPatcher.factWeapons) {
+                        if (pressed.startsWith(p1.getBase())) {
+                            for (Pair<String,Integer> p2 : p1.getVar()) {
+                                if(p2.getBase().equals(weapon.getEDID())) {
+                                    p1.getVar().remove(p2);
                                     break;
                                 }
                             }
@@ -272,9 +270,10 @@ public class ModPanel extends SPSettingPanel {
                     }
                 // IF faction option does not contain "*" - ACTION is add to faction
                 } else {
-                    for (Pair<String, ArrayList<WEAP>> p : FSPatcher.factWeapons) {
+                    for (Pair<String, ArrayList<Pair<String,Integer>>> p : FSPatcher.factWeapons) {
                         if (pressed.startsWith(p.getBase())) {
-                            p.getVar().add(weapon);
+                            Pair<String,Integer> fw = new Pair<>(weapon.getEDID(),1);
+                            p.getVar().add(fw);
                             break;
                         }
                     }
@@ -460,7 +459,7 @@ public class ModPanel extends SPSettingPanel {
                     
                     LComboBox factbox = new LComboBox("", FSPatcher.settingsFont, FSPatcher.settingsColor);
                     factbox.addItem("");
-                    for (String s : FactionKeys) {
+                    for (String s : FSPatcher.FactionKeys) {
                         factbox.addItem(s);
                     }
                     box.setSelectedIndex(0);

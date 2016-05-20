@@ -194,10 +194,10 @@ public class XMLTools {
             
             /* Add Faction Weapon Keys to XML */
             /* For Every Faction Configured */
-            for (Pair<String, ArrayList<WEAP>> p : FSPatcher.factWeapons) {
+            for (Pair<String, ArrayList<Pair<String,Integer>>> p : FSPatcher.factWeapons) {
                 /* For Every Weapon in Faction */
-                for (WEAP weap : p.getVar()) {
-                    String modName = weap.getFormMaster().print();
+                for (Pair<String,Integer> weap : p.getVar()) {
+                    String modName = getModName(weap.getBase());
                     Node theMod = null;
                     boolean found = false;
                     /* Check if Mod is already created in XML */
@@ -227,7 +227,7 @@ public class XMLTools {
                         if (item.getNodeType() == Node.ELEMENT_NODE) {
                             Element eItem = (Element) item;
                             /* If Weapon is found */
-                            if (eItem.getAttribute("EDID").contentEquals(weap.getEDID())) {
+                            if (eItem.getAttribute("EDID").contentEquals(weap.getBase())) {
                                 theWeapon = item;
                                 weapFound = true;
                             }
@@ -237,12 +237,13 @@ public class XMLTools {
                     if (!weapFound) {
                         Element newElement = newDoc.createElement("item");
                         newElement.setAttribute("type", "weapon");
-                        newElement.setAttribute("EDID", weap.getEDID());
+                        newElement.setAttribute("EDID", weap.getBase());
                         theMod.appendChild(newElement);
                         theWeapon = newElement;    
                     }
                     /* Add Faction Keyword to Weapon */
                     Element newKey = newDoc.createElement("keyword");
+                    newKey.setAttribute("level", weap.getVar().toString());
                     newKey.setTextContent("dienes_faction_" + p.getBase());
                     theWeapon.appendChild(newKey);
                 }
@@ -325,6 +326,32 @@ public class XMLTools {
                                         for (int k = 0; k < kList.getLength(); k++) {
                                             Element eKey = (Element) kList.item(k);
                                             KYWD newKey = (KYWD) merger.getMajor(eKey.getTextContent(), GRUP_TYPE.KYWD);
+                                            // Check if it is a Faction Weapon keyword
+                                            if (eKey.getTextContent().startsWith("dienes_faction_")) {
+                                                String factKey = eKey.getTextContent().replace("dienes_faction_", "");
+                                                int level = Integer.parseInt(eKey.getAttribute("level"));
+                                                // Find place holder for that key
+                                                for(Pair<String, ArrayList<Pair<String,Integer>>> p1 : FSPatcher.factWeapons) {
+                                                    if (p1.getBase().equals(factKey)) {
+                                                        // Find if weapon is already there (added in the GUI)
+                                                        boolean found = false;
+                                                        for (Pair<String,Integer> p2 : p1.getVar()) {
+                                                            if (p2.getBase().equals(weapon.getEDID())) {
+                                                                found = true;
+                                                                if(level != p2.getVar()) {
+                                                                    SPGlobal.log("XML", "Faction Key: Weapon "+p2.getBase()+" has level " + level + " in XML and level " + p2.getVar() + " set in the GUI.");
+                                                                }
+                                                                break;
+                                                            }
+                                                        }
+                                                        if (!found) {
+                                                            Pair<String, Integer> np = new Pair<>(weapon.getEDID(),level);
+                                                            p1.getVar().add(np);
+                                                        }
+                                                    }
+                                                    break;
+                                                }
+                                            }
                                             if (newKey != null) {
                                                 keys.addKeywordRef(newKey.getForm());
                                                 patch.addRecord(weapon);
@@ -465,6 +492,20 @@ public class XMLTools {
             SPGlobal.closeDebug();
         }
         return newDoc;
+    }
+    
+    private static String getModName (String weaponEDID) {
+        String ret = "";
+        for(ModPanel mp : FSPatcher.modPanels) {
+            for(WEAP weapon : mp.myMod.getWeapons()) {
+                if (weapon.getEDID().equals(weaponEDID)) {
+                    ret = mp.myMod.getName();
+                    break;
+                }
+            }
+        }
+        
+        return ret;
     }
     
 }
