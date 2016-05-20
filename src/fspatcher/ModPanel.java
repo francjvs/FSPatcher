@@ -238,6 +238,7 @@ public class ModPanel extends SPSettingPanel {
             weapon = a;
             box = b;
             keys = FSPatcher.FactionKeys;
+            keys.add(0,"");
         }
 
         @Override

@@ -168,9 +168,6 @@ public class OutfitsPanel extends SPSettingPanel {
     @Override
     public void onOpen(SPMainMenuPanel parent) {
         
-        //LPanel c = (LPanel) parent.getTreeLock();
-        //System.out.println(Arrays.toString(c.getComponents()));
-        //initialize();
         for (int i = 0; i<outfitKeys.size();i++) {
             boolean found = false;
             String k = outfitKeys.get(i);
@@ -250,7 +247,6 @@ public class OutfitsPanel extends SPSettingPanel {
                                 box.highlightChanged();
                                 break;
                             }
-                            break;
                         }
                     }
                 }

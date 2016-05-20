@@ -139,6 +139,7 @@ public class FSPatcher implements SUM {
             @Override
             public void run() {
                 theInitFunction();
+                initFactionWeapons();
 
                 for (Mod m : activeMods) {
                     ModPanel panel = new ModPanel(settingsMenu, m, global);
@@ -466,6 +467,16 @@ public class FSPatcher implements SUM {
         } catch (Exception e) {
             throw new RuntimeException (e.getMessage());
         }
+    }
+    
+    public void initFactionWeapons() {
+        
+        for (String faction : FactionKeys) {
+            ArrayList<Pair<String,Integer>> weapon = new ArrayList<>(0);
+            Pair<String, ArrayList<Pair<String,Integer>>> fct = new Pair<>(faction,weapon);
+            factWeapons.add(fct);
+        }
+        
     }
     
     

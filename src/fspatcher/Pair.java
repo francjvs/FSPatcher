@@ -51,4 +51,24 @@ public class Pair<L, R> {
         
         return found;
     }
+    
+    public ArrayList<Pair<L,Integer>> reorderPairArray(ArrayList<Pair<L,Integer>> list) {
+        ArrayList<Pair<L,Integer>> ret = new ArrayList<>(0);
+        ret.add(list.get(0));
+        for (int i=1; i<list.size(); i++) {
+            for (int j=0; j< ret.size(); j++) {
+                if (j==ret.size()-1) { //last position, simply add to list
+                    ret.add(list.get(i));
+                    break;
+                } else if (list.get(i).r < ret.get(j).r) { //if element in new list is bigger than element from old list add there
+                    ret.add(j, list.get(i));
+                    break;
+                }
+            }
+        }
+        
+        return ret;
+    }
+            
+            
 }
