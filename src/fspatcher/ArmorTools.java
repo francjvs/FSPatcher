@@ -1358,12 +1358,12 @@ public class ArmorTools {
     static boolean isTiered(String name) {
         boolean ret = false;
         ArrayList<String> names = new ArrayList<>();
-        names.add("BanditArmorMeleeHeavyOutfit");
+        /*names.add("BanditArmorMeleeHeavyOutfit");
         names.add("BanditArmorMeleeHeavyNoShieldOutfit");
         names.add("BanditArmorHeavyBossOutfit");
         names.add("BanditArmorHeavyBossNoShieldOutfit");
         names.add("BanditArmorMeleeShield20Outfit");
-        names.add("BanditArmorMeleeNoShieldOutfit");
+        names.add("BanditArmorMeleeNoShieldOutfit");*/
         names.add("ThalmorArmorWithHelmetOutfit");
         names.add("WarlockOutfitLeveled");
         names.add("NecromancerOutfit");
@@ -1381,7 +1381,7 @@ public class ArmorTools {
     static String getTierKey(String name) {
         String ret = null;
 
-        if (name.startsWith("BanditArmorMeleeHeavyOutfit")) {
+        /*if (name.startsWith("BanditArmorMeleeHeavyOutfit")) {
             ret = "BanditHeavy_Tier_";
         }
         if (name.startsWith("BanditArmorMeleeShield20Outfit")) {
@@ -1398,7 +1398,7 @@ public class ArmorTools {
         }
         if (name.startsWith("BanditArmorMeleeNoShieldOutfit")) {
             ret = "BanditLight_Tier_";
-        }
+        }*/
         if (name.startsWith("ThalmorArmorWithHelmetOutfit")) {
             ret = "Thalmor_Tier_";
         }
@@ -1417,7 +1417,7 @@ public class ArmorTools {
 
     static String getBits(String name) {
         String ret = null;
-        if (name.startsWith("BanditArmorMeleeHeavyOutfit")) {
+        /*if (name.startsWith("BanditArmorMeleeHeavyOutfit")) {
             ret = "HCGB";
         }
         if (name.startsWith("BanditArmorMeleeHeavyNoShieldOutfit")) {
@@ -1434,7 +1434,7 @@ public class ArmorTools {
         }
         if (name.startsWith("BanditArmorMeleeNoShieldOutfit")) {
             ret = "CBG";
-        }
+        }*/
         if (name.startsWith("ThalmorArmorWithHelmetOutfit")) {
             ret = "HCBG";
         }
