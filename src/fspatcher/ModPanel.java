@@ -248,6 +248,16 @@ public class ModPanel extends SPSettingPanel {
             if(!pressed.equals("")) {
                 // IF faction option contains "*" - ACTION is remove from faction
                 if (pressed.startsWith("*")) {
+                    // Change option text to reflect change
+                    for (int i=0; i<keys.size(); i++) {
+                        String s = keys.get(i);
+                        if (s.equals(pressed)) {
+                            pressed = s.replace("*", "");
+                            keys.remove(i);
+                            keys.add(i, pressed);
+                            index = i;
+                        }
+                    }
                     for (Pair<String, ArrayList<Pair<String,Integer>>> p1 : FSPatcher.factWeapons) {
                         if (pressed.startsWith(p1.getBase())) {
                             for (Pair<String,Integer> p2 : p1.getVar()) {
@@ -257,16 +267,6 @@ public class ModPanel extends SPSettingPanel {
                                 }
                             }
                             break;
-                        }
-                    }
-                    // Change option text to reflect change
-                    for (int i=0; i<keys.size(); i++) {
-                        String s = keys.get(i);
-                        if (s.equals(pressed)) {
-                            s = s.replace("*", "");
-                            keys.remove(i);
-                            keys.add(i, s);
-                            index = i;
                         }
                     }
                 // IF faction option does not contain "*" - ACTION is add to faction
