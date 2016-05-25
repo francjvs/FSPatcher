@@ -65,7 +65,7 @@ public class FSPatcher implements SUM {
     public static ArrayList<Pair<String, ArrayList<ARMO>>> outfits = new ArrayList<>(0);
     public static ArrayList<Pair<String, ArrayList<String>>> tiers = new ArrayList<>(0);
     public static ArrayList<Pair<String, ArrayList<Pair<String,Integer>>>> factWeapons = new ArrayList<>(0);
-    public static ArrayList<String> FactionKeys = new ArrayList<>(Arrays.asList("Alikr", "OrcStronghold","Thalmor","Imperial","LegateImperial","Guard","Sons","BearSons","Wolf"));
+    public static ArrayList<String> FactionKeys = new ArrayList<>(Arrays.asList("Alikr", "OrcStronghold","Thalmor","Imperial","LegateImperial","Guard","Sons","BearSons","Wolf","Vigilants"));
     public static ArrayList<Pair<Mod, ArrayList<Pair<ARMO, KYWD>>>> modArmors = new ArrayList<>(0);
     public static ArrayList<Pair<Mod, ArrayList<Pair<WEAP, KYWD>>>> modWeapons = new ArrayList<>(0);
     public static boolean listify = false;
