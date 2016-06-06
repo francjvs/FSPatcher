@@ -148,7 +148,7 @@ public class FSPatcher implements SUM {
                 }
 
                 settingsMenu.addMenu(new OutfitsPanel(settingsMenu), false, save, Settings.OTHER_SETTINGS);
-                settingsMenu.addMenu(new FactionsPanel(settingsMenu), false, save, Settings.OTHER_SETTINGS);
+                //settingsMenu.addMenu(new FactionsPanel(settingsMenu), false, save, Settings.OTHER_SETTINGS);
 
                 settingsMenu.updateUI();
             }

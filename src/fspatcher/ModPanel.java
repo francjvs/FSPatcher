@@ -433,7 +433,7 @@ public class ModPanel extends SPSettingPanel {
                 boolean newItem = weapon.getFormMaster().print().contentEquals(myMod.getName());
                 if (!non_playable && !bound && (enchant.isNull()) && newItem) {
                     LPanel panel = new LPanel(275, 200);
-                    panel.setSize(300, 80);
+                    panel.setSize(300, 45);
                     LLabel weaponName = new LLabel(weapon.getName(), FSPatcher.settingsFont, FSPatcher.settingsColor);
 
 
@@ -458,7 +458,7 @@ public class ModPanel extends SPSettingPanel {
 
                     weaponBoxes.add(box);
                     
-                    LComboBox factbox = new LComboBox("", FSPatcher.settingsFont, FSPatcher.settingsColor);
+                    /*LComboBox factbox = new LComboBox("", FSPatcher.settingsFont, FSPatcher.settingsColor);
                     factbox.addItem("");
                     for (String s : FSPatcher.FactionKeys) {
                         factbox.addItem(s);
@@ -471,7 +471,7 @@ public class ModPanel extends SPSettingPanel {
                     panel.setPlacement(factbox);
                     Rectangle r = factbox.getBounds();
                     r.y -= 20;
-                    factbox.setBounds(r);
+                    factbox.setBounds(r);*/
                     setPlacement(panel);
                     
                     Add(panel);

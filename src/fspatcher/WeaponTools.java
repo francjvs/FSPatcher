@@ -161,6 +161,8 @@ public class WeaponTools {
                                 } else {
                                     passed = true;
                                 }
+                            } else if (getMultiTypeVar(isVariant,comp)) {
+                                passed = true;
                             }
                             if (passed) {
                                 //SPGlobal.log("variant found", weapon.getEDID() + " is variant of " + form.getEDID());
@@ -423,7 +425,7 @@ public class WeaponTools {
                     KYWD base = weaponHasAnyKeyword(obj, baseArmorKeysFLST, merger);
                     boolean hasVar = hasVariant(obj);
                     if ((base != null) && (hasVar)) {
-                        SPGlobal.log(obj.getEDID(), "has keyword" + base);
+                        //SPGlobal.log(obj.getEDID(), "has keyword" + base);
 
                         String eid = "DienesLVLI" + obj.getEDID();
                         MajorRecord r;
@@ -433,7 +435,7 @@ public class WeaponTools {
                             r = patch.getMajor(eid, GRUP_TYPE.LVLI);
                         }
                         if (r != null){
-                            SPGlobal.log(obj.getEDID(), "sublist found " + r.getEDID());
+                            //SPGlobal.log(obj.getEDID(), "sublist found " + r.getEDID());
                             int count = item.getCount();
                             actor.removeItem(item.getForm());
                             actor.addItem(r.getForm(), count);
@@ -446,5 +448,19 @@ public class WeaponTools {
                 }
             }
         }
+    }
+    
+    static boolean getMultiTypeVar(KYWD var, WEAP weapon) {
+        boolean ret = false;
+        String key = var.getEDID();
+        switch(key){
+        case "WEAPON_IMPERIAL": if(!weapon.getWeaponType().equals(WEAP.WeaponType.Bow)){
+                                    ret = true;
+                                }
+                                break;
+        case "WEAPON_SCIMITAR": ret = true;
+                                break;
+        }
+        return ret;
     }
 }
