@@ -161,7 +161,7 @@ public class WeaponTools {
                                 } else {
                                     passed = true;
                                 }
-                            } else if (getMultiTypeVar(isVariant,comp)) {
+                            } else if (getMultiTypeVar(isVariant,comp,weapon)) {
                                 passed = true;
                             }
                             if (passed) {
@@ -450,15 +450,24 @@ public class WeaponTools {
         }
     }
     
-    static boolean getMultiTypeVar(KYWD var, WEAP weapon) {
+    static boolean getMultiTypeVar(KYWD var, WEAP base, WEAP weapon) {
         boolean ret = false;
         String key = var.getEDID();
         switch(key){
-        case "WEAPON_IMPERIAL": if(!weapon.getWeaponType().equals(WEAP.WeaponType.Bow)){
+        case "WEAPON_IMPERIAL": if(!base.getWeaponType().equals(WEAP.WeaponType.Bow) && !weapon.getWeaponType().equals(WEAP.WeaponType.Bow) && !weapon.getWeaponType().equals(WEAP.WeaponType.Crossbow)) {
                                     ret = true;
                                 }
                                 break;
-        case "WEAPON_SCIMITAR": ret = true;
+        case "WEAPON_SCIMITAR": if(!weapon.getWeaponType().equals(WEAP.WeaponType.Bow) && !weapon.getWeaponType().equals(WEAP.WeaponType.Crossbow)) {
+                                    ret = true;
+                                }
+                                break;
+        case "WEAPON_SILVER":   if(base.getWeaponType().equals(WEAP.WeaponType.TwoHSword) && weapon.getWeaponType().equals(WEAP.WeaponType.TwoHBluntAxe)) {
+                                    ret = true;
+                                }
+                                else if(base.getWeaponType().equals(WEAP.WeaponType.OneHSword) && (weapon.getWeaponType().equals(WEAP.WeaponType.OneHAxe) || weapon.getWeaponType().equals(WEAP.WeaponType.OneHBlunt))) {
+                                    ret = true;
+                                }
                                 break;
         }
         return ret;
