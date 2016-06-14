@@ -472,4 +472,49 @@ public class WeaponTools {
         }
         return ret;
     }
+    
+    static void patchAmmo (){
+        for (AMMO a : merger.getAmmo()) {
+            float damage = a.getDamage() * 2;
+            if (damage > 0 ) {
+                a.setDamage(damage);
+                patch.addRecord(a);
+            }
+        }
+        for (PROJ p : merger.getProjectiles()) {
+            if(p.getProjType().equals(PROJ.ProjectileType.Arrow)){
+                float speed = p.getSpeed()* (float) 1.5;
+                p.setGravity((float)0.2);
+                p.setSpeed(speed);
+                /*if (p.getEDID().contains("Arrow")){
+                    p.set(PROJ.ProjectileFlag.SuperSonic, false);
+                }
+                else if (p.getEDID().contains("Fire") || p.getEDID().contains("Ice") || p.getEDID().contains("Shock")){
+                    p.set(PROJ.ProjectileFlag.CanBePickedUp, false);
+                }*/
+                patch.addRecord(p);
+            }
+        }
+    }
+    
+    static void patchWeapons () {
+        for (WEAP w : merger.getWeapons()){
+            FormID fid = w.getTemplate();
+            //SPGlobal.log("Patch WEAP", "checking if weapon" + w.getEDID() + " has template: " + fid);
+            if (fid.isNull()) {
+                fid = w.getForm();
+                WEAP pw = (WEAP) patch.getMajor(fid, GRUP_TYPE.WEAP);
+                //SPGlobal.log("Patch WEAP", "checking if weapon" + w.getEDID() + " is already in patch: " + pw);
+                if (pw == null) {
+                    pw = w;
+                }
+                int damage = pw.getDamage() * 2;
+                if (damage > 0) {
+                    pw.setDamage(damage);
+                    //SPGlobal.log("Patch WEAP", "Weapon" + w.getEDID() + " has new Damage: " + damage);
+                    patch.addRecord(pw);
+                }
+            }
+        }
+    }
 }

@@ -46,7 +46,9 @@ public class FSPatcher implements SUM {
         GRUP_TYPE.FLST,
         GRUP_TYPE.KYWD,
         GRUP_TYPE.OTFT,
-        GRUP_TYPE.NPC_
+        GRUP_TYPE.NPC_,
+        GRUP_TYPE.AMMO,
+        GRUP_TYPE.PROJ
     };
     public static String myPatchName = "FS Patcher";
     public static String authorName = "francjvs";
@@ -384,6 +386,13 @@ public class FSPatcher implements SUM {
             WeaponTools.linkLVLIWeapons(baseWeaponKeysFLST);
             SPProgressBarPlug.setStatus("Linking weapon in NPC inventory");
             WeaponTools.linkINVWeapons(baseWeaponKeysFLST);
+            
+            SPProgressBarPlug.setStatus("Patching Armors");
+            ArmorTools.patchArmors(merger, patch);
+            SPProgressBarPlug.setStatus("Patching Weapons");
+            WeaponTools.patchWeapons();
+            SPProgressBarPlug.setStatus("Patching Ammunition");
+            WeaponTools.patchAmmo();
         }
         
     }

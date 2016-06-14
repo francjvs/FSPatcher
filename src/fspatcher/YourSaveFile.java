@@ -24,6 +24,7 @@ public class YourSaveFile extends SkyProcSave {
         Add(Settings.SKIP_INACTIVE_MODS, true, true);
         Add(Settings.USE_MATCHING_OUTFITS, true, true);
         Add(Settings.USE_FACTION_WEAPONS, true, true);
+        Add(Settings.PROCESS_AMMO,true,true);
 
     }
 
@@ -66,6 +67,9 @@ public class YourSaveFile extends SkyProcSave {
         helpInfo.put(Settings.USE_FACTION_WEAPONS, 
                 "Enable specific weapons for factions.");
         
+        helpInfo.put(Settings.PROCESS_AMMO, 
+                "Process Projectiles to match ABT 100% faster");
+        
         helpInfo.put(Settings.TEST, 
                 "Test help info");
     }
@@ -82,6 +86,7 @@ public class YourSaveFile extends SkyProcSave {
         SKIP_INACTIVE_MODS,
         USE_MATCHING_OUTFITS,
         USE_FACTION_WEAPONS,
+        PROCESS_AMMO,
         TEST;
     }
 }

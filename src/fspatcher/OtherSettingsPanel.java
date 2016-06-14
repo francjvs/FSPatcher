@@ -21,6 +21,7 @@ public class OtherSettingsPanel extends SPSettingPanel {
     LCheckBox LootifyDragonborn;
     LCheckBox SkipInactiveMods;
     LCheckBox UseMatchingOutfits;
+    LCheckBox processAMMO;
 
     public OtherSettingsPanel(SPMainMenuPanel parent_) {
 	super(parent_, "Other Settings", FSPatcher.headerColor);
@@ -51,6 +52,11 @@ public class OtherSettingsPanel extends SPSettingPanel {
         UseMatchingOutfits.tie(YourSaveFile.Settings.USE_MATCHING_OUTFITS, FSPatcher.save, SUMGUI.helpPanel, true);
         setPlacement(UseMatchingOutfits);
         AddSetting(UseMatchingOutfits);
+        
+        processAMMO = new LCheckBox("Process AMMO", FSPatcher.settingsFont, FSPatcher.settingsColor);
+        processAMMO.tie(YourSaveFile.Settings.PROCESS_AMMO, FSPatcher.save, SUMGUI.helpPanel, true);
+        setPlacement(processAMMO);
+        AddSetting(processAMMO);
 
 	alignRight();
 

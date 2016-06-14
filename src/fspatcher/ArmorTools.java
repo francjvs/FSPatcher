@@ -1381,7 +1381,7 @@ public class ArmorTools {
     static String getTierKey(String name) {
         String ret = null;
 
-        /*if (name.startsWith("BanditArmorMeleeHeavyOutfit")) {
+        if (name.startsWith("BanditArmorMeleeHeavyOutfit")) {
             ret = "BanditHeavy_Tier_";
         }
         if (name.startsWith("BanditArmorMeleeShield20Outfit")) {
@@ -1398,7 +1398,7 @@ public class ArmorTools {
         }
         if (name.startsWith("BanditArmorMeleeNoShieldOutfit")) {
             ret = "BanditLight_Tier_";
-        }*/
+        }
         if (name.startsWith("ThalmorArmorWithHelmetOutfit")) {
             ret = "Thalmor_Tier_";
         }
@@ -1559,6 +1559,24 @@ public class ArmorTools {
                 }
                 if (changed) {
                     patch.addRecord(actor);
+                }
+            }
+        }
+    }
+    
+    static void patchArmors(Mod merger, Mod patch) {
+        for (ARMO a : merger.getArmors()) {
+            FormID fid = a.getTemplate();
+            if (fid.isNull()) {
+                fid = a.getForm();
+                ARMO pa = (ARMO) patch.getMajor(fid, GRUP_TYPE.ARMO);
+                if (pa == null) {
+                    pa = a;
+                }
+                float ar = pa.getArmorRatingFloat() * 2;
+                if (ar > 0) {
+                    pa.setArmorRatingFloat(ar);
+                    patch.addRecord(pa);
                 }
             }
         }
