@@ -146,22 +146,27 @@ public class OutfitsPanel extends SPSettingPanel {
         outfitComp = new ArrayList<>(0);
         
         tierNames = new ArrayList<>(0);
+            tierNames.add("Adventurer");
             tierNames.add("Alikr");
+            tierNames.add("Bandit Light");
+            tierNames.add("Bandit Heavy");
+            tierNames.add("Bandit Boss");
             tierNames.add("Dawnguard");
+            tierNames.add("Guardian");
             tierNames.add("Hunter");
             tierNames.add("Imperial Soldier");
-            tierNames.add("Imperial Mage");
+            //tierNames.add("Imperial Mage");
             tierNames.add("Imperial Legate");
-            tierNames.add("Imperial Officer");
+            //tierNames.add("Imperial Heavy");
+            tierNames.add("Necromancer");
             tierNames.add("Orc Stronghold");
             tierNames.add("Sons Soldier");
-            tierNames.add("Sons Mage");
-            tierNames.add("Sons Officer");
-            tierNames.add("Thalmor Soldier");
+            //tierNames.add("Sons Mage");
+            tierNames.add("Sons Bear");
+            tierNames.add("Thalmor");
             tierNames.add("Thalmor Mage");
             tierNames.add("Vigilants");
-            tierNames.add("Guardian");
-            tierNames.add("Adventurer");
+            tierNames.add("Warlock");
 
     }
 

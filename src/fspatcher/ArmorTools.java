@@ -1003,15 +1003,19 @@ public class ArmorTools {
     static void insertTieredArmors(LVLI list, String keyPrefix, String bits, Mod merger, Mod patch) {
         boolean changed = false;
 
-        if (keyPrefix.contains("Boss") || keyPrefix.contains("Thalmor")) {
+        /*if (keyPrefix.contains("Boss") || keyPrefix.contains("Thalmor")) {
             list.set(LeveledRecord.LVLFlag.CalcAllLevelsEqualOrBelowPC, false);
-        }
+        }*/
 
         for (int lev = 1; lev < 100; lev++) {
             int tier = lev / 3;
             String tierName = keyPrefix + String.valueOf(tier);
             KYWD key = (KYWD) merger.getMajor(tierName, GRUP_TYPE.KYWD);
-            if (key != null) {
+            if (key == null) {
+                key = new KYWD(tierName);
+                patch.addRecord(key);
+            } else {
+            //if (key != null) {
                 ArrayList<ArrayList<ARMO>> array = getArrayOfTieredArmorSetsByKeyword(key, merger);
                 String edid = "DienesLVLI_" + keyPrefix + String.valueOf(tier);
                 for (ArrayList<ARMO> ar : array) {
@@ -1358,16 +1362,33 @@ public class ArmorTools {
     static boolean isTiered(String name) {
         boolean ret = false;
         ArrayList<String> names = new ArrayList<>();
-        /*names.add("BanditArmorMeleeHeavyOutfit");
+        names.add("BanditArmorMeleeHeavyOutfit");
         names.add("BanditArmorMeleeHeavyNoShieldOutfit");
         names.add("BanditArmorHeavyBossOutfit");
         names.add("BanditArmorHeavyBossNoShieldOutfit");
         names.add("BanditArmorMeleeShield20Outfit");
-        names.add("BanditArmorMeleeNoShieldOutfit");*/
+        names.add("BanditArmorMeleeNoShieldOutfit");
         names.add("ThalmorArmorWithHelmetOutfit");
         names.add("WarlockOutfitLeveled");
         names.add("NecromancerOutfit");
         names.add("NecromancerOutfitHood50");
+        // New
+        names.add("RedguardClothesOutfit01");
+        names.add("DawnguardArmorMelee");
+        names.add("DLC1OutfitDawnguardAll");
+        names.add("HunterClothesRND");
+        names.add("ArmorImperialLightOutfit");
+        names.add("CWSoldierImperialSoldierOutfit");
+        names.add("CWSoldierImperialOfficerOutfitNoHelmet");
+        names.add("ArmorOrcStrongholdNoHelmetOutfit");
+        names.add("ArmorOrcStrongholdNoHelmetShieldOutfit");
+        names.add("ArmorOrcStrongholdOutfit");
+        names.add("CWSoldierSonsSoldierOutfit");
+        names.add("CWSoldierSonsOfficerOutfitNoHelmet");
+        names.add("ThalmorOutfit01");
+        names.add("ThalmorOutfitNoHood");
+        names.add("VigilantOfStendarrOutfit");
+        
 
         for (String s : names) {
             if (name.contentEquals(s)) {
@@ -1411,13 +1432,58 @@ public class ArmorTools {
         if (name.contentEquals("NecromancerOutfitHood50")) {
             ret = "Necromancer_Tier_";
         }
+        if (name.contentEquals("RedguardClothesOutfit01")) {
+            ret = "Alikr_Tier_";
+        }
+        if (name.contentEquals("DawnguardArmorMelee")) {
+            ret = "Dawnguard_Tier_";
+        }
+        if (name.contentEquals("DLC1OutfitDawnguardAll")) {
+            ret = "Dawnguard_Tier_";
+        }
+        if (name.contentEquals("HunterClothesRND")) {
+            ret = "Hunter_Tier_";
+        }
+        if (name.contentEquals("ArmorImperialLightOutfit")) {
+            ret = "ImperialSoldier_Tier_";
+        }
+        if (name.contentEquals("CWSoldierImperialSoldierOutfit")) {
+            ret = "ImperialSoldier_Tier_";
+        }
+        if (name.contentEquals("CWSoldierImperialOfficerOutfitNoHelmet")) {
+            ret = "ImperialLegate_Tier_";
+        }
+        if (name.contentEquals("ArmorOrcStrongholdNoHelmetOutfit")) {
+            ret = "OrcStronghold_Tier_";
+        }
+        if (name.contentEquals("ArmorOrcStrongholdNoHelmetShieldOutfit")) {
+            ret = "OrcStronghold_Tier_";
+        }
+        if (name.contentEquals("ArmorOrcStrongholdOutfit")) {
+            ret = "OrcStronghold_Tier_";
+        }
+        if (name.contentEquals("CWSoldierSonsSoldierOutfit")) {
+            ret = "SonsSoldier_Tier_";
+        }
+        if (name.contentEquals("CWSoldierSonsOfficerOutfitNoHelmet")) {
+            ret = "SonsBear_Tier_";
+        }
+        if (name.contentEquals("ThalmorOutfit01")) {
+            ret = "ThalmorMage_Tier_";
+        }
+        if (name.contentEquals("ThalmorOutfitNoHood")) {
+            ret = "ThalmorMage_Tier_";
+        }
+        if (name.contentEquals("VigilantOfStendarrOutfit")) {
+            ret = "Vigilants_Tier_";
+        }
 
         return ret;
     }
 
     static String getBits(String name) {
         String ret = null;
-        /*if (name.startsWith("BanditArmorMeleeHeavyOutfit")) {
+        if (name.startsWith("BanditArmorMeleeHeavyOutfit")) {
             ret = "HCGB";
         }
         if (name.startsWith("BanditArmorMeleeHeavyNoShieldOutfit")) {
@@ -1434,9 +1500,9 @@ public class ArmorTools {
         }
         if (name.startsWith("BanditArmorMeleeNoShieldOutfit")) {
             ret = "CBG";
-        }*/
+        }
         if (name.startsWith("ThalmorArmorWithHelmetOutfit")) {
-            ret = "HCBG";
+            ret = "HCBGS";
         }
         if (name.startsWith("WarlockOutfitLeveled")) {
             ret = "HCBG";
@@ -1447,7 +1513,51 @@ public class ArmorTools {
         if (name.contentEquals("NecromancerOutfitHood50")) {
             ret = "HCGB";
         }
-
+        if (name.contentEquals("RedguardClothesOutfit01")) {
+            ret = "HCB";
+        }
+        if (name.contentEquals("DawnguardArmorMelee")) {
+            ret = "HCGB";
+        }
+        if (name.contentEquals("DLC1OutfitDawnguardAll")) {
+            ret = "HCGB";
+        }
+        if (name.contentEquals("HunterClothesRND")) {
+            ret = "HCGB";
+        }
+        if (name.contentEquals("ArmorImperialLightOutfit")) {
+            ret = "HCGB";
+        }
+        if (name.contentEquals("CWSoldierImperialSoldierOutfit")) {
+            ret = "HCGBS";
+        }
+        if (name.contentEquals("CWSoldierImperialOfficerOutfitNoHelmet")) {
+            ret = "HCGB";
+        }
+        if (name.contentEquals("ArmorOrcStrongholdNoHelmetOutfit")) {
+            ret = "CGB";
+        }
+        if (name.contentEquals("ArmorOrcStrongholdNoHelmetShieldOutfit")) {
+            ret = "CGBS";
+        }
+        if (name.contentEquals("ArmorOrcStrongholdOutfit")) {
+            ret = "HCGB";
+        }
+        if (name.contentEquals("CWSoldierSonsSoldierOutfit")) {
+            ret = "HCGB";
+        }
+        if (name.contentEquals("CWSoldierSonsOfficerOutfitNoHelmet")) {
+            ret = "HCGB";
+        }
+        if (name.contentEquals("ThalmorOutfit01")) {
+            ret = "HCGB";
+        }
+        if (name.contentEquals("ThalmorOutfitNoHood")) {
+            ret = "CGB";
+        }
+        if (name.contentEquals("VigilantOfStendarrOutfit")) {
+            ret = "HCGB";
+        }
 
         return ret;
     }
