@@ -1119,7 +1119,15 @@ public class ArmorTools {
     static ArrayList getArrayOfTieredArmorSetsByKeyword(KYWD key, Mod merger) {
         ArrayList<ArrayList<ARMO>> ret = new ArrayList<>(0);
         for (Pair<KYWD, ArrayList<ARMO>> p : matchingSets) {
-            if (armorHasKeyword(p.getVar().get(0), key, merger)) {
+            // Because there can be armors in multiple outfits, all armors in outfit must have key
+            boolean failed = false;
+            for (ARMO a : p.getVar()) {
+                if (!armorHasKeyword(a, key, merger)) {
+                    failed = true;
+                    break;
+                }
+            }
+            if (failed == false) {
                 ret.add(p.getVar());
             }
         }
