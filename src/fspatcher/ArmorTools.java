@@ -32,7 +32,11 @@ public class ArmorTools {
                 }
 
                 String bits = getBits(lotftName);
-                LVLI subList = new LVLI("DienesLVLI" + lotftName + bits + "List");
+                String lvlname = "DienesLVLI" + lotftName + bits + "List";
+                LVLI subList = (LVLI) merger.getMajor(lvlname, GRUP_TYPE.LVLI);
+                if (subList == null) {
+                    subList = new LVLI(lvlname);
+                }
                 subList.set(LeveledRecord.LVLFlag.UseAll, false);
                 String tierKey = getTierKey(lotftName);
 
@@ -550,22 +554,24 @@ public class ArmorTools {
     static void setupSets(Mod merger, Mod patch) {
         for (ARMO armor : merger.getArmors()) {
             if (armor.getTemplate().equals(FormID.NULL)) {
-                KYWD outfitKey = hasKeyStartsWith(armor, "dienes_outfit", merger);
-                if (outfitKey != null) {
-                    boolean found = false;
-                    for (Pair<KYWD, ArrayList<ARMO>> p : matchingSets) {
-                        if (p.getBase().equals(outfitKey)) {
-                            if (!p.getVar().contains(armor)) {
-                                p.getVar().add(armor);
-                                found = true;
-                                break;
+                ArrayList<KYWD> outfitKeys = hasManyKeysStartsWith(armor, "dienes_outfit", merger);
+                if (!outfitKeys.isEmpty()) {
+                    for (KYWD outfitKey : outfitKeys) {
+                        boolean found = false;
+                        for (Pair<KYWD, ArrayList<ARMO>> p : matchingSets) {
+                            if (p.getBase().equals(outfitKey)) {
+                                if (!p.getVar().contains(armor)) {
+                                    p.getVar().add(armor);
+                                    found = true;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    if (found == false) {
-                        Pair<KYWD, ArrayList<ARMO>> q = new Pair<>(outfitKey, new ArrayList<ARMO>(0));
-                        q.getVar().add(armor);
-                        matchingSets.add(q);
+                        if (found == false) {
+                            Pair<KYWD, ArrayList<ARMO>> q = new Pair<>(outfitKey, new ArrayList<ARMO>(0));
+                            q.getVar().add(armor);
+                            matchingSets.add(q);
+                        }
                     }
                 }
             }
@@ -593,6 +599,33 @@ public class ArmorTools {
 
             if (refKey.getEDID().startsWith(start)) {
                 ret = refKey;
+            }
+        }
+
+        return ret;
+    }
+    
+    static ArrayList<KYWD> hasManyKeysStartsWith(ARMO armor, String start, Mod merger) {
+        ArrayList<KYWD> ret = new ArrayList<>(0);
+
+        ArrayList<FormID> a;
+
+        ARMO replace = armor;
+        FormID tmp = replace.getTemplate();
+        //SPGlobal.log("hasKeyword", varKey.getEDID() + " " + replace.getEDID() + " " + tmp.getFormStr());
+        if (!tmp.isNull()) {
+            replace = (ARMO) merger.getMajor(tmp, GRUP_TYPE.ARMO);
+        }
+        //SPGlobal.log(replace.getEDID(), varKey.getEDID());
+        KeywordSet k = replace.getKeywordSet();
+        a = k.getKeywordRefs();
+        for (FormID temp : a) {
+            KYWD refKey = (KYWD) merger.getMajor(temp, GRUP_TYPE.KYWD);
+            //SPGlobal.log("formid", temp.toString());
+            //SPGlobal.log("KYWD compare", refKey.getEDID() + " " + varKey.getEDID() + " " + (varKey.equals(refKey)));
+
+            if (refKey.getEDID().startsWith(start)) {
+                ret.add(refKey);
             }
         }
 
@@ -1119,7 +1152,7 @@ public class ArmorTools {
     static ArrayList getArrayOfTieredArmorSetsByKeyword(KYWD key, Mod merger) {
         ArrayList<ArrayList<ARMO>> ret = new ArrayList<>(0);
         for (Pair<KYWD, ArrayList<ARMO>> p : matchingSets) {
-            // Because there can be armors in multiple outfits, all armors in outfit must have key
+            // Because there can be armors in multiple outfits with different tiers, all armors in outfit must have key
             boolean failed = false;
             for (ARMO a : p.getVar()) {
                 if (!armorHasKeyword(a, key, merger)) {
