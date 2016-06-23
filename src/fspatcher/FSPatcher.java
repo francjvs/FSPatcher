@@ -394,10 +394,12 @@ public class FSPatcher implements SUM {
             if (save.getBool(YourSaveFile.Settings.PROCESS_WEAPONS)) {
                 SPProgressBarPlug.setStatus("Patching Weapons");
                 WeaponTools.patchWeapons();
-            }
-            if (save.getBool(YourSaveFile.Settings.PROCESS_AMMO)) {
                 SPProgressBarPlug.setStatus("Patching Ammunition");
                 WeaponTools.patchAmmo();
+            }
+            if (save.getBool(YourSaveFile.Settings.PROCESS_AMMO)) {
+                SPProgressBarPlug.setStatus("Patching Projectiles");
+                WeaponTools.patchProj();
             }
         }
         

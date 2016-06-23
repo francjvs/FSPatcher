@@ -481,6 +481,9 @@ public class WeaponTools {
                 patch.addRecord(a);
             }
         }
+    }
+    
+    static void patchProj () {
         for (PROJ p : merger.getProjectiles()) {
             if(p.getProjType().equals(PROJ.ProjectileType.Arrow)){
                 float speed = p.getSpeed()* (float) 1.5;
