@@ -22,6 +22,8 @@ public class OtherSettingsPanel extends SPSettingPanel {
     LCheckBox SkipInactiveMods;
     LCheckBox UseMatchingOutfits;
     LCheckBox processAMMO;
+    LCheckBox processARMO;
+    LCheckBox processWEAP;
 
     public OtherSettingsPanel(SPMainMenuPanel parent_) {
 	super(parent_, "Other Settings", FSPatcher.headerColor);
@@ -38,10 +40,10 @@ public class OtherSettingsPanel extends SPSettingPanel {
 	setPlacement(importOnStartup);
 	AddSetting(importOnStartup);
         
-        LootifyDragonborn = new LCheckBox("Lootify the Dragonborn DLC items", FSPatcher.settingsFont, FSPatcher.settingsColor);
+        /*LootifyDragonborn = new LCheckBox("Lootify the Dragonborn DLC items", FSPatcher.settingsFont, FSPatcher.settingsColor);
         LootifyDragonborn.tie(YourSaveFile.Settings.LOOTIFY_DRAGONBORN, FSPatcher.save, SUMGUI.helpPanel, true);
         setPlacement(LootifyDragonborn);
-        AddSetting(LootifyDragonborn);
+        AddSetting(LootifyDragonborn);*/
         
         SkipInactiveMods = new LCheckBox("Don't process inactive mods", FSPatcher.settingsFont, FSPatcher.settingsColor);
         SkipInactiveMods.tie(YourSaveFile.Settings.SKIP_INACTIVE_MODS, FSPatcher.save, SUMGUI.helpPanel, true);
@@ -52,6 +54,16 @@ public class OtherSettingsPanel extends SPSettingPanel {
         UseMatchingOutfits.tie(YourSaveFile.Settings.USE_MATCHING_OUTFITS, FSPatcher.save, SUMGUI.helpPanel, true);
         setPlacement(UseMatchingOutfits);
         AddSetting(UseMatchingOutfits);
+        
+        processARMO = new LCheckBox("Process AMMO", FSPatcher.settingsFont, FSPatcher.settingsColor);
+        processARMO.tie(YourSaveFile.Settings.PROCESS_ARMORS, FSPatcher.save, SUMGUI.helpPanel, true);
+        setPlacement(processARMO);
+        AddSetting(processARMO);
+        
+        processWEAP = new LCheckBox("Process AMMO", FSPatcher.settingsFont, FSPatcher.settingsColor);
+        processWEAP.tie(YourSaveFile.Settings.PROCESS_WEAPONS, FSPatcher.save, SUMGUI.helpPanel, true);
+        setPlacement(processWEAP);
+        AddSetting(processWEAP);
         
         processAMMO = new LCheckBox("Process AMMO", FSPatcher.settingsFont, FSPatcher.settingsColor);
         processAMMO.tie(YourSaveFile.Settings.PROCESS_AMMO, FSPatcher.save, SUMGUI.helpPanel, true);

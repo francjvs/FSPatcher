@@ -47,10 +47,10 @@ public class YourSaveFile extends SkyProcSave {
 		"These are other settings related to this patcher program.");
         
         helpInfo.put(Settings.PROCESS_WEAPONS, 
-                "Process the weapons");
+                "Process the weapons, doubling their damage");
         
         helpInfo.put(Settings.PROCESS_ARMORS, 
-                "Process the armors");
+                "Process the armors, doubling their armor rating");
         helpInfo.put(Settings.PROCESS_OUTFITS, 
                 "Process the outfits. NOTE: this probably will make them mismatched in game");
         helpInfo.put(Settings.LOOTIFY_DRAGONBORN, 

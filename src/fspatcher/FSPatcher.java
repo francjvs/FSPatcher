@@ -387,12 +387,18 @@ public class FSPatcher implements SUM {
             SPProgressBarPlug.setStatus("Linking weapon in NPC inventory");
             WeaponTools.linkINVWeapons(baseWeaponKeysFLST);
             
-            SPProgressBarPlug.setStatus("Patching Armors");
-            ArmorTools.patchArmors(merger, patch);
-            SPProgressBarPlug.setStatus("Patching Weapons");
-            WeaponTools.patchWeapons();
-            SPProgressBarPlug.setStatus("Patching Ammunition");
-            WeaponTools.patchAmmo();
+            if (save.getBool(YourSaveFile.Settings.PROCESS_ARMORS)) {
+                SPProgressBarPlug.setStatus("Patching Armors");
+                ArmorTools.patchArmors(merger, patch);
+            }
+            if (save.getBool(YourSaveFile.Settings.PROCESS_WEAPONS)) {
+                SPProgressBarPlug.setStatus("Patching Weapons");
+                WeaponTools.patchWeapons();
+            }
+            if (save.getBool(YourSaveFile.Settings.PROCESS_AMMO)) {
+                SPProgressBarPlug.setStatus("Patching Ammunition");
+                WeaponTools.patchAmmo();
+            }
         }
         
     }
