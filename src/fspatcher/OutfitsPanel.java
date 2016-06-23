@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class OutfitsPanel extends SPSettingPanel {
     
-    protected int panelHeight = 990;
+    protected int panelHeight = 1000;
 
     private ArrayList<String> outfitKeys;
     private ArrayList<String> tierNames;
@@ -91,7 +91,7 @@ public class OutfitsPanel extends SPSettingPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             deleteOutfit(setKey,null,null);
-            updateModPanels(setKey,null,e);
+            //updateModPanels(setKey,null,e);
             updatePanel(setKey);
         }
     }
@@ -126,7 +126,7 @@ public class OutfitsPanel extends SPSettingPanel {
                         } else {
                             updateBox(box,p.getVar());
                         }
-                        updateModPanels(setKey,armor,e);
+                        //updateModPanels(setKey,armor,e);
                         break;
                     }
                 }
@@ -146,13 +146,13 @@ public class OutfitsPanel extends SPSettingPanel {
         outfitComp = new ArrayList<>(0);
         
         tierNames = new ArrayList<>(0);
-            tierNames.add("Adventurer");
+            //tierNames.add("Adventurer");
             tierNames.add("Alikr");
             tierNames.add("Bandit Light");
             tierNames.add("Bandit Heavy");
             tierNames.add("Bandit Boss");
             tierNames.add("Dawnguard");
-            tierNames.add("Guardian");
+            //tierNames.add("Guardian");
             tierNames.add("Hunter");
             tierNames.add("Imperial Soldier");
             //tierNames.add("Imperial Mage");
@@ -216,7 +216,7 @@ public class OutfitsPanel extends SPSettingPanel {
                     outfitArmor.addItem(a.getEDID());
                 }
                 outfitArmor.addEnterButton("Remove", new ArmorRemover(key,outfitArmor));
-                outfitArmor.setSize(200, 25);
+                outfitArmor.setSize(270, 25);
                 panel.add(outfitArmor);
                 panel.setPlacement(outfitArmor);
                 
@@ -316,12 +316,12 @@ public class OutfitsPanel extends SPSettingPanel {
     
     private void updatePanel (String setKey) {
         boolean found = false;
-        ArrayList<Component> del = null;
+        Pair<String,ArrayList<Component>> del = null;
         for (int i = 0; i < outfitComp.size(); i++) {
             Pair<String,ArrayList<Component>> psc = outfitComp.get(i);
             System.out.println(psc.getBase() + " + " + setKey);
             if(psc.getBase().equals(setKey)) {
-                del = psc.getVar();
+                del = psc;
                 found = true;
                 for (Component c : psc.getVar()) {
                     c.setVisible(false);
@@ -352,7 +352,7 @@ public class OutfitsPanel extends SPSettingPanel {
      * @param outfit Pair<String, ArrayList<ARMO>> from the outfit list
      */
     private void deleteOutfit(String setKey, Pair<String, ArrayList<String>> tier, Pair<String, ArrayList<ARMO>> outfit) {
-        if (tier != null) {    
+        if (tier == null) {    
             for (Pair<String, ArrayList<String>> p : FSPatcher.tiers) {
                 if (p.getBase().contentEquals(setKey)) {
                     FSPatcher.tiers.remove(p);
@@ -362,7 +362,7 @@ public class OutfitsPanel extends SPSettingPanel {
         } else {
             FSPatcher.tiers.remove(tier);
         }
-        if (outfit != null) {
+        if (outfit == null) {
             for (Pair<String, ArrayList<ARMO>> p : FSPatcher.outfits) {
                 if (p.getBase().contentEquals(setKey)) {
                     FSPatcher.outfits.remove(p);

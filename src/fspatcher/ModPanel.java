@@ -187,7 +187,7 @@ public class ModPanel extends SPSettingPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             String key = field.getText();
-            if (setKey != null || key.contentEquals("")) {
+            /*if (setKey != null || key.contentEquals("")) {
                 for (int i = 0; i<FSPatcher.outfits.size(); i++) {
                     Pair<String, ArrayList<ARMO>> p = FSPatcher.outfits.get(i);
                     if (p.getBase().contentEquals(setKey)) {
@@ -201,7 +201,7 @@ public class ModPanel extends SPSettingPanel {
                     }
                 }
                 field.clearHighlight();
-            }
+            }*/
 
             if (!key.contentEquals("")) {
                 boolean found = false;
