@@ -55,12 +55,12 @@ public class OtherSettingsPanel extends SPSettingPanel {
         setPlacement(UseMatchingOutfits);
         AddSetting(UseMatchingOutfits);
         
-        processARMO = new LCheckBox("Process AMMO", FSPatcher.settingsFont, FSPatcher.settingsColor);
+        processARMO = new LCheckBox("Process ARMO", FSPatcher.settingsFont, FSPatcher.settingsColor);
         processARMO.tie(YourSaveFile.Settings.PROCESS_ARMORS, FSPatcher.save, SUMGUI.helpPanel, true);
         setPlacement(processARMO);
         AddSetting(processARMO);
         
-        processWEAP = new LCheckBox("Process AMMO", FSPatcher.settingsFont, FSPatcher.settingsColor);
+        processWEAP = new LCheckBox("Process WEAP", FSPatcher.settingsFont, FSPatcher.settingsColor);
         processWEAP.tie(YourSaveFile.Settings.PROCESS_WEAPONS, FSPatcher.save, SUMGUI.helpPanel, true);
         setPlacement(processWEAP);
         AddSetting(processWEAP);

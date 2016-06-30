@@ -1683,11 +1683,17 @@ public class ArmorTools {
                         if (!outfitID.isNull()) {
                             OTFT outfit = (OTFT) merger.getMajor(outfitID,GRUP_TYPE.OTFT);
                             String outfitName = outfit.getEDID();
-                            if (needsShield(outfitName)) {
+                            String outfitBits = getBits(outfitName);
+                            boolean hasShield = needsShield(outfitName);
+                            if (outfitBits != null) {
+                                hasShield = hasShield || outfitBits.contains("S");
+                            }
+                            if (hasShield) {
                                 // Outfit provides Shield
                                 // remove shield and make sure the program skips next part
                                 actor.removeItem(item.getForm());
                                 base = null;
+                                changed = true;
                             }
                         }
                     }
